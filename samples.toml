@@ -1,0 +1,69 @@
+[[Rules]]
+  Label = "area/provider/boltdb"
+  Regex = "(?i).*(boltdb).*"
+
+[[Rules]]
+  Label = "area/provider/consul"
+  Regex = "(?i).*(consul).*"
+
+[[Rules]]
+  Label = "area/provider/docker"
+  Regex = "(?i).*(docker).*"
+
+[[Rules]]
+  Label = "area/provider/ecs"
+  Regex = "(?i).*(ecs).*"
+
+[[Rules]]
+  Label = "area/provider/etcd"
+  Regex = "(?i).*(etcd).*"
+
+[[Rules]]
+  Label = "area/provider/eureka"
+  Regex = "(?i).*(eureka).*"
+
+[[Rules]]
+  Label = "area/provider/k8s"
+  Regex = "(?i).*(k8s|kubernetes).*"
+
+[[Rules]]
+  Label = "area/provider/marathon"
+  Regex = "(?i).*(marathon).*"
+
+[[Rules]]
+  Label = "area/provider/mesos"
+  Regex = "(?i).*(mesos).*"
+
+[[Rules]]
+  Label = "area/provider/rancher"
+  Regex = "(?i).*(rancher).*"
+
+[[Rules]]
+  Label = "area/middleware"
+  Regex = "(?i)middlewares/.*"
+
+[[Rules]]
+  Label = "area/acme"
+  Regex = "(?i).*(acme).*"
+
+[[Rules]]
+  Label = "area/logs"
+  Regex = "(?i).*(logs|accesslog).*"
+
+[[Rules]]
+  Label = "area/webui"
+  Regex = "(?i)webui/*"
+
+[[Rules]]
+  Label = "area/infrastructure"
+  Regex = "(?i)(\\.github|script/).*"
+
+[Limits]
+  [Limits.Small]
+    SumLimit = 200
+    DiffLimit = 100
+    FilesLimit = 5
+  [Limits.Medium]
+    SumLimit = 400
+    DiffLimit = 300
+    FilesLimit = 10
