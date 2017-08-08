@@ -7,13 +7,19 @@ import (
 )
 
 const (
-	ContributorWaitingForCorrections = "contributor/waiting-for-corrections"
-	WIP                              = "WIP"
-	StatusPrefix                     = "status/"
-	StatusNeedsTriage                = "status/0-needs-triage"
-	StatusNeedsDesignReview          = "status/1-needs-design-review"
-	StatusNeedsReview                = "status/2-needs-review"
-	StatusNeedsMerge                 = "status/3-needs-merge"
+	WIP                     = "WIP"
+	StatusPrefix            = "status/"
+	StatusNeedsTriage       = "status/0-needs-triage"
+	StatusNeedsDesignReview = "status/1-needs-design-review"
+	StatusNeedsReview       = "status/2-needs-review"
+	StatusNeedsMerge        = "status/3-needs-merge"
+)
+
+const (
+	ContributorWaitingForCorrections   = "contributor/waiting-for-corrections"
+	ContributorNeedMoreInformation     = "contributor/need-more-information"
+	ContributorWaitingForDocumentation = "contributor/waiting-for-documentation"
+	ContributorWaitingForFeedback      = "contributor/waiting-for-feedback"
 )
 
 const (

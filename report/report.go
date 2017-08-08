@@ -33,7 +33,14 @@ func MakeReport(client *github.Client, ctx context.Context, owner string, reposi
 		makeWithLGTM,
 		search.WithReview,
 		search.WithLabels(label.StatusNeedsReview),
-		search.WithExcludedLabels(label.ContributorWaitingForCorrections, label.WIP, label.StatusNeedsDesignReview, label.StatusNeedsMerge))
+		search.WithExcludedLabels(
+			label.WIP,
+			label.ContributorWaitingForCorrections,
+			label.ContributorWaitingForFeedback,
+			label.ContributorWaitingForDocumentation,
+			label.ContributorNeedMoreInformation,
+			label.StatusNeedsDesignReview,
+			label.StatusNeedsMerge))
 	if err != nil {
 		return nil, err
 	}
@@ -43,8 +50,14 @@ func MakeReport(client *github.Client, ctx context.Context, owner string, reposi
 		makeWithoutLGTM,
 		search.WithReviewNone,
 		search.WithLabels(label.StatusNeedsReview),
-		search.WithExcludedLabels(label.ContributorWaitingForCorrections, label.WIP),
-	)
+		search.WithExcludedLabels(
+			label.WIP,
+			label.ContributorWaitingForCorrections,
+			label.ContributorWaitingForFeedback,
+			label.ContributorWaitingForDocumentation,
+			label.ContributorNeedMoreInformation,
+			label.StatusNeedsDesignReview,
+			label.StatusNeedsMerge))
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +66,9 @@ func MakeReport(client *github.Client, ctx context.Context, owner string, reposi
 	rp.contrib, err = makePRSummaries(client, ctx, owner, repositoryName,
 		makeWithLGTM,
 		search.WithReview,
-		search.WithLabels(label.StatusNeedsReview, label.ContributorWaitingForCorrections),
+		search.WithLabels(
+			label.StatusNeedsReview,
+			label.ContributorWaitingForCorrections),
 		search.WithExcludedLabels(label.WIP))
 	if err != nil {
 		return nil, err
