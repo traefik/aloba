@@ -17,13 +17,13 @@
   branch = "master"
   name = "github.com/golang/protobuf"
   packages = ["proto"]
-  revision = "748d386b5c1ea99658fd69fe9f03991ce86a90c1"
+  revision = "1909bc2f63dc92bb931deace8b8312c4db72d12f"
 
 [[projects]]
   branch = "master"
   name = "github.com/google/go-github"
   packages = ["github"]
-  revision = "35d38108ba83757e9b6fc00e4ba7e2d597c651be"
+  revision = "44e0413e5b74655281275e8c90cff2b27d9673a1"
 
 [[projects]]
   branch = "master"
@@ -34,8 +34,8 @@
 [[projects]]
   name = "github.com/ldez/ghwebhook"
   packages = [".","eventtype"]
-  revision = "70c534c535dcb3b46ce4b931bbbefe466d3871e5"
-  version = "v1.0.0"
+  revision = "a38b828c450271c6c06b6094f8ab17c47bfbf8fe"
+  version = "v1.1.1"
 
 [[projects]]
   branch = "master"
@@ -53,13 +53,13 @@
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context","context/ctxhttp","websocket"]
-  revision = "f5079bd7f6f74e23c4d65efa0f4ce14cbd6a3c0f"
+  revision = "090ebbdfc2aff44cc6674372b72e02e731f7f0ef"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/oauth2"
   packages = [".","internal"]
-  revision = "96fca6c793ec32f068f97942ae3c7c073810dfc1"
+  revision = "9a379c6b3e95a790ffc43293c2a78dee0d7b6e20"
 
 [[projects]]
   name = "google.golang.org/appengine"
@@ -70,6 +70,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e7e681830098d1321846ebe4c04a3f1e8322ab80e164e0c3fd24356f3bbf842d"
+  inputs-digest = "ba7c6b6043cf42c3b3df03b4f3466bf60fcb92c11cfd71beb7f0f7101eae5114"
   solver-name = "gps-cdcl"
   solver-version = 1
