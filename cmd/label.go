@@ -9,8 +9,6 @@ import (
 	"github.com/containous/myrmica-aloba/internal/search"
 	"github.com/containous/myrmica-aloba/label"
 	"github.com/google/go-github/github"
-	ghw "github.com/ldez/ghwebhook"
-	"github.com/ldez/ghwebhook/eventtype"
 )
 
 type RulesConfiguration struct {
@@ -42,35 +40,6 @@ func Label(options *LabelOptions) error {
 		return runWebHook(client, ctx, options.Owner, options.RepositoryName, rc, options.DryRun)
 	}
 	return runStandalone(client, ctx, options.Owner, options.RepositoryName, rc, options.DryRun)
-}
-
-func runWebHook(client *github.Client, ctx context.Context, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) error {
-	handlers := ghw.NewEventHandlers().
-		OnPullRequest(func(payload *github.WebHookPayload, event *github.PullRequestEvent) {
-			go func(event *github.PullRequestEvent) {
-				log.Println(event.GetAction(), event.GetNumber())
-				if event.GetAction() == "opened" {
-					issue, _, err := client.Issues.Get(ctx, owner, repositoryName, event.GetNumber())
-					if err != nil {
-						log.Println(err)
-						return
-					}
-
-					err = addLabelsToPR(client, ctx, owner, repositoryName, *issue, rc, dryRun)
-					if err != nil {
-						log.Println(err)
-					}
-				}
-			}(event)
-		})
-
-	hook := ghw.NewWebHook(handlers, ghw.WithPort(5000), ghw.WithEventTypes(eventtype.PullRequest))
-	err := hook.ListenAndServe()
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func runStandalone(client *github.Client, ctx context.Context, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) error {
