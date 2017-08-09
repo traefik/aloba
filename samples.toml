@@ -60,10 +60,11 @@
 
 [Limits]
   [Limits.Small]
-    SumLimit = 200
-    DiffLimit = 100
-    FilesLimit = 5
+    SumLimit = 150
+    DiffLimit = 70
+    FilesLimit = 20
   [Limits.Medium]
     SumLimit = 400
-    DiffLimit = 300
-    FilesLimit = 10
+    DiffLimit = 200
+    FilesLimit = 50
+
