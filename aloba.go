@@ -58,6 +58,12 @@ func createReportCommand() *flaeg.Command {
 		DefaultPointersConfig: &cmd.ReportOptions{},
 	}
 	reportCmd.Run = func() error {
+		required(reportOptions.GitHubToken, "github-token")
+		required(reportOptions.Owner, "owner")
+		required(reportOptions.RepositoryName, "repo-name")
+		required(reportOptions.SlackToken, "slack-token")
+		required(reportOptions.ChannelID, "channel-id")
+
 		err := cmd.Report(reportOptions)
 		if err != nil {
 			log.Println(err)
@@ -82,6 +88,11 @@ func createLabelCommand() *flaeg.Command {
 		DefaultPointersConfig: &cmd.LabelOptions{},
 	}
 	labelCmd.Run = func() error {
+		required(labelOptions.GitHubToken, "github-token")
+		required(labelOptions.Owner, "owner")
+		required(labelOptions.RepositoryName, "repo-name")
+		required(labelOptions.RulesFilePath, "rules-path")
+
 		err := cmd.Label(labelOptions)
 		if err != nil {
 			log.Println(err)
@@ -90,4 +101,11 @@ func createLabelCommand() *flaeg.Command {
 	}
 
 	return labelCmd
+}
+
+func required(field string, fieldName string) error {
+	if len(field) == 0 {
+		log.Fatalf("%s is mandatory.", fieldName)
+	}
+	return nil
 }
