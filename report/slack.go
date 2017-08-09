@@ -17,13 +17,13 @@ func SendToSlack(slackToken string, channelID string, iconEmoji string, botName 
 
 	msgParts := []string{}
 	if len(model.withReviews) != 0 {
-		msgParts = append(msgParts, "With reviews:", makeMessage(model.withReviews))
+		msgParts = append(msgParts, "With reviews:", makeMessage(model.withReviews, false))
 	}
 	if len(model.noReviews) != 0 {
-		msgParts = append(msgParts, "No reviews:", makeMessage(model.noReviews))
+		msgParts = append(msgParts, "No reviews:", makeMessage(model.noReviews, false))
 	}
 	if len(model.designReview) != 0 {
-		msgParts = append(msgParts, "Need design review:", makeMessage(model.designReview))
+		msgParts = append(msgParts, "Need design review:", makeMessage(model.designReview, false))
 	}
 
 	if len(msgParts) != 0 {

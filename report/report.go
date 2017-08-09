@@ -18,6 +18,8 @@ type model struct {
 	designReview []prSummary
 }
 
+const teamName = "traefik"
+
 var loginMap = map[string]string{
 	"timoreimann": "ttr",
 	"emilevauge":  "emile",
@@ -25,12 +27,18 @@ var loginMap = map[string]string{
 
 func MakeReport(client *github.Client, ctx context.Context, owner string, repositoryName string) (*model, error) {
 
-	rp := &model{}
 	var err error
 
+	members, err := gh.GetTeamMembers(client, ctx, owner, teamName)
+	if err != nil {
+		return nil, err
+	}
+
+	rp := &model{}
+
 	// reviews + status-2 + no contrib/
-	rp.withReviews, err = makePRSummaries(client, ctx, owner, repositoryName,
-		makeWithLGTM,
+	rp.withReviews, err = makePRSummaries(client, ctx, owner, repositoryName, members,
+		makeWithReview,
 		search.WithReview,
 		search.WithLabels(label.StatusNeedsReview),
 		search.WithExcludedLabels(
@@ -46,8 +54,8 @@ func MakeReport(client *github.Client, ctx context.Context, owner string, reposi
 	}
 
 	// no review + status-2 + no contrib/
-	rp.noReviews, err = makePRSummaries(client, ctx, owner, repositoryName,
-		makeWithoutLGTM,
+	rp.noReviews, err = makePRSummaries(client, ctx, owner, repositoryName, nil,
+		makeWithoutReview,
 		search.WithReviewNone,
 		search.WithLabels(label.StatusNeedsReview),
 		search.WithExcludedLabels(
@@ -63,8 +71,8 @@ func MakeReport(client *github.Client, ctx context.Context, owner string, reposi
 	}
 
 	// contrib/
-	rp.contrib, err = makePRSummaries(client, ctx, owner, repositoryName,
-		makeWithLGTM,
+	rp.contrib, err = makePRSummaries(client, ctx, owner, repositoryName, members,
+		makeWithReview,
 		search.WithReview,
 		search.WithLabels(
 			label.StatusNeedsReview,
@@ -75,8 +83,8 @@ func MakeReport(client *github.Client, ctx context.Context, owner string, reposi
 	}
 
 	// design review
-	rp.designReview, err = makePRSummaries(client, ctx, owner, repositoryName,
-		makeWithoutLGTM,
+	rp.designReview, err = makePRSummaries(client, ctx, owner, repositoryName, nil,
+		makeWithoutReview,
 		search.WithLabels(label.StatusNeedsDesignReview),
 		search.WithExcludedLabels(label.WIP))
 	if err != nil {
@@ -89,34 +97,37 @@ func MakeReport(client *github.Client, ctx context.Context, owner string, reposi
 func DisplayReport(rp *model) {
 	if len(rp.withReviews) != 0 {
 		fmt.Println("With reviews:")
-		fmt.Println(makeMessage(rp.withReviews))
+		fmt.Println(makeMessage(rp.withReviews, true))
 	}
 	if len(rp.noReviews) != 0 {
 		fmt.Println("No reviews:")
-		fmt.Println(makeMessage(rp.noReviews))
+		fmt.Println(makeMessage(rp.noReviews, true))
 	}
 	if len(rp.contrib) != 0 {
 		fmt.Println("waiting-for-corrections:")
-		fmt.Println(makeMessage(rp.contrib))
+		fmt.Println(makeMessage(rp.contrib, true))
 	}
 	if len(rp.designReview) != 0 {
 		fmt.Println("Need design review:")
-		fmt.Println(makeMessage(rp.designReview))
+		fmt.Println(makeMessage(rp.designReview, true))
 	}
 }
 
-func makeMessage(summaries []prSummary) string {
+func makeMessage(summaries []prSummary, details bool) string {
 	var message string
 	for _, summary := range summaries {
-		message += makeLine(summary)
+		message += makeLine(summary, details)
 	}
 	return message
 }
 
-func makeLine(summary prSummary) string {
+func makeLine(summary prSummary, details bool) string {
 	line := fmt.Sprintf("- <https://github.com/containous/traefik/pull/%[1]d|#%[1]d>:", summary.Number)
 	line += fmt.Sprintf(" %3d days,", summary.DaysBetweenCreation)
-	line += fmt.Sprintf(" %d LGTM", summary.LGTM)
+	line += fmt.Sprintf(" %d LGTM", len(summary.Approved))
+	if details {
+		line += fmt.Sprintf(" %v", summary.Approved)
+	}
 	if len(summary.ChangesRequested) != 0 {
 		line += fmt.Sprintf(", changes requested by %v", summary.ChangesRequested)
 	}
@@ -133,26 +144,31 @@ func makeLine(summary prSummary) string {
 	return line
 }
 
-func makeWithLGTM(client *github.Client, ctx context.Context, owner string, repositoryName string, issue github.Issue) prSummary {
+func makeWithReview(client *github.Client, ctx context.Context, owner string, repositoryName string, members []*github.User, issue github.Issue) prSummary {
 
-	approvedReviews, changesRequestedReviews, err := gh.GetReviewStatus(client, ctx, owner, repositoryName, issue.GetNumber())
+	approvedReviews, changesRequestedReviews, err := gh.GetReviewStatus(client, ctx, owner, repositoryName, members, issue.GetNumber())
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	crb := []string{}
-	for gitHublogin := range changesRequestedReviews {
-		slackLogin, ok := loginMap[gitHublogin]
+	for gitHubLogin := range changesRequestedReviews {
+		slackLogin, ok := loginMap[gitHubLogin]
 		if !ok {
-			slackLogin = gitHublogin
+			slackLogin = gitHubLogin
 		}
 
 		crb = append(crb, fmt.Sprintf("<@%s>", slackLogin))
 	}
 
-	return newPRSummary(issue, len(approvedReviews), crb)
+	ar := []string{}
+	for gitHubLogin := range approvedReviews {
+		ar = append(ar, gitHubLogin)
+	}
+
+	return newPRSummary(issue, ar, crb)
 }
 
-func makeWithoutLGTM(_ *github.Client, _ context.Context, _ string, _ string, issue github.Issue) prSummary {
-	return newPRSummary(issue, 0, nil)
+func makeWithoutReview(_ *github.Client, _ context.Context, _ string, _ string, _ []*github.User, issue github.Issue) prSummary {
+	return newPRSummary(issue, nil, nil)
 }

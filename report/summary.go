@@ -16,7 +16,7 @@ type prSummary struct {
 	Number              int
 	Title               string
 	DaysBetweenCreation int
-	LGTM                int
+	Approved            []string
 	ChangesRequested    []string
 	Size                string
 	Areas               []string
@@ -24,7 +24,8 @@ type prSummary struct {
 
 func makePRSummaries(client *github.Client, ctx context.Context,
 	owner string, repositoryName string,
-	transform func(client *github.Client, ctx context.Context, owner string, repositoryName string, issue github.Issue) prSummary,
+	members []*github.User,
+	transform func(client *github.Client, ctx context.Context, owner string, repositoryName string, members []*github.User, issue github.Issue) prSummary,
 	searchFilter ...search.Parameter) ([]prSummary, error) {
 
 	issues, err := search.FindOpenPR(ctx, client, owner, repositoryName, searchFilter...)
@@ -35,14 +36,14 @@ func makePRSummaries(client *github.Client, ctx context.Context,
 	var summaries []prSummary
 
 	for _, issue := range issues {
-		summary := transform(client, ctx, owner, repositoryName, issue)
+		summary := transform(client, ctx, owner, repositoryName, members, issue)
 		summaries = append(summaries, summary)
 	}
 
 	return summaries, nil
 }
 
-func newPRSummary(issue github.Issue, LGTM int, requestChanges []string) prSummary {
+func newPRSummary(issue github.Issue, approved []string, requestChanges []string) prSummary {
 
 	var areas []string
 	var size string
@@ -62,7 +63,7 @@ func newPRSummary(issue github.Issue, LGTM int, requestChanges []string) prSumma
 		Number:              issue.GetNumber(),
 		Title:               issue.GetTitle(),
 		DaysBetweenCreation: int(math.Floor(time.Now().Sub(issue.GetCreatedAt()).Hours() / 24)),
-		LGTM:                LGTM,
+		Approved:            approved,
 		Areas:               areas,
 		Size:                size,
 		ChangesRequested:    requestChanges,

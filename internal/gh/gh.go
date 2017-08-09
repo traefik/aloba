@@ -2,15 +2,16 @@ package gh
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
 )
 
 const (
-	approved         = "APPROVED"
-	changesRequested = "CHANGES_REQUESTED"
-	commented        = "COMMENTED"
+	Approved         = "APPROVED"
+	ChangesRequested = "CHANGES_REQUESTED"
+	Commented        = "COMMENTED"
 )
 
 func NewGitHubClient(ctx context.Context, token string) *github.Client {
@@ -27,9 +28,9 @@ func NewGitHubClient(ctx context.Context, token string) *github.Client {
 	return client
 }
 
-func GetReviewStatus(client *github.Client, ctx context.Context, owner string, repositoryName string, prNumber int) (map[string]string, map[string]string, error) {
+func GetReviewStatus(client *github.Client, ctx context.Context, owner string, repositoryName string, members []*github.User, prNumber int) (map[string]string, map[string]string, error) {
 	opts := &github.ListOptions{
-		PerPage: 50,
+		PerPage: 80,
 	}
 
 	reviews, _, err := client.PullRequests.ListReviews(ctx, owner, repositoryName, prNumber, opts)
@@ -39,7 +40,7 @@ func GetReviewStatus(client *github.Client, ctx context.Context, owner string, r
 
 	uniqueReviews := make(map[string]string)
 	for _, review := range reviews {
-		if review.GetState() != commented {
+		if review.GetState() != Commented && isTeamMember(members, review.User.GetLogin()) {
 			uniqueReviews[review.User.GetLogin()] = review.GetState()
 		}
 	}
@@ -47,12 +48,52 @@ func GetReviewStatus(client *github.Client, ctx context.Context, owner string, r
 	approvedReviews := make(map[string]string)
 	changesRequestedReviews := make(map[string]string)
 	for login, state := range uniqueReviews {
-		if state == approved {
+		if state == Approved {
 			approvedReviews[login] = state
-		} else if state == changesRequested {
+		} else if state == ChangesRequested {
 			changesRequestedReviews[login] = state
 		}
 	}
 
 	return approvedReviews, changesRequestedReviews, nil
+}
+
+func GetTeamMembers(client *github.Client, ctx context.Context, owner string, teamName string) ([]*github.User, error) {
+	team, err := getTeamByName(client, ctx, owner, teamName)
+	if err != nil {
+		return nil, err
+	}
+
+	orgTeamMemberOpts := &github.OrganizationListTeamMembersOptions{}
+	orgTeamMemberOpts.PerPage = 100
+
+	members, _, err := client.Organizations.ListTeamMembers(ctx, team.GetID(), orgTeamMemberOpts)
+	if err != nil {
+		return nil, err
+	}
+
+	return members, nil
+}
+
+func getTeamByName(client *github.Client, ctx context.Context, owner string, teamName string) (*github.Team, error) {
+	teams, _, err := client.Organizations.ListTeams(ctx, owner, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, team := range teams {
+		if team.GetName() == teamName {
+			return team, nil
+		}
+	}
+	return nil, fmt.Errorf("team %q not found.", teamName)
+}
+
+func isTeamMember(members []*github.User, login string) bool {
+	for _, member := range members {
+		if member.GetLogin() == login {
+			return true
+		}
+	}
+	return false
 }
