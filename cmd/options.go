@@ -21,7 +21,7 @@ type LabelOptions struct {
 	GitHubToken    string `long:"github-token" description:"GitHub token."`
 	Owner          string `short:"o" description:"Repository owner."`
 	RepositoryName string `long:"repo-name" short:"r" description:"Repository name."`
-	RulesFilePath  string `long:"rules-path" description:"xxxxxxxxxxxx"`
+	RulesFilePath  string `long:"rules-path" description:"Path to the rule file."`
 	Debug          bool   `description:"Debug mode."`
 	DryRun         bool   `long:"dry-run" description:"Dry run mode."`
 	WebHook        bool   `long:"web-hook" description:"Run as WebHook."`

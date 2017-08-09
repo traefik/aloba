@@ -58,6 +58,9 @@ func createReportCommand() *flaeg.Command {
 		DefaultPointersConfig: &cmd.ReportOptions{},
 	}
 	reportCmd.Run = func() error {
+		if reportOptions.DryRun {
+			log.Print("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
+		}
 		required(reportOptions.GitHubToken, "github-token")
 		required(reportOptions.Owner, "owner")
 		required(reportOptions.RepositoryName, "repo-name")
@@ -88,6 +91,9 @@ func createLabelCommand() *flaeg.Command {
 		DefaultPointersConfig: &cmd.LabelOptions{},
 	}
 	labelCmd.Run = func() error {
+		if labelOptions.DryRun {
+			log.Print("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
+		}
 		required(labelOptions.GitHubToken, "github-token")
 		required(labelOptions.Owner, "owner")
 		required(labelOptions.RepositoryName, "repo-name")

@@ -29,7 +29,7 @@ Flags:
     --github-token GitHub token.                      
 -o, --owner        Repository owner.                  
 -r, --repo-name    Repository name.                   
-    --rules-path   xxxxxxxxxxxx                       (default "./rules.toml")
+    --rules-path   Path to the rule file.             (default "./rules.toml")
     --web-hook     Run as WebHook.                    (default "false")
 -h, --help         Print Help (this message) and exit 
 
