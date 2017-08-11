@@ -3,8 +3,8 @@ package cmd
 import (
 	"context"
 
-	"github.com/containous/myrmica-aloba/internal/gh"
-	"github.com/containous/myrmica-aloba/report"
+	"github.com/containous/aloba/internal/gh"
+	"github.com/containous/aloba/report"
 )
 
 // Report create a report and publish on Slack

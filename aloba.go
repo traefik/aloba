@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/containous/aloba/cmd"
 	"github.com/containous/flaeg"
-	"github.com/containous/myrmica-aloba/cmd"
 )
 
 func main() {

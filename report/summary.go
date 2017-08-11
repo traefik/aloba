@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/containous/myrmica-aloba/internal/search"
-	"github.com/containous/myrmica-aloba/label"
+	"github.com/containous/aloba/internal/search"
+	"github.com/containous/aloba/label"
 	"github.com/google/go-github/github"
 )
 

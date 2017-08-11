@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/containous/myrmica-aloba/internal/gh"
-	"github.com/containous/myrmica-aloba/label"
+	"github.com/containous/aloba/internal/gh"
+	"github.com/containous/aloba/label"
 	"github.com/google/go-github/github"
 	ghw "github.com/ldez/ghwebhook"
 	"github.com/ldez/ghwebhook/eventtype"
