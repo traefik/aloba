@@ -9,17 +9,18 @@ import (
 const (
 	WIP                     = "WIP"
 	StatusPrefix            = "status/"
-	StatusNeedsTriage       = "status/0-needs-triage"
-	StatusNeedsDesignReview = "status/1-needs-design-review"
-	StatusNeedsReview       = "status/2-needs-review"
-	StatusNeedsMerge        = "status/3-needs-merge"
+	StatusNeedsTriage       = StatusPrefix + "0-needs-triage"
+	StatusNeedsDesignReview = StatusPrefix + "1-needs-design-review"
+	StatusNeedsReview       = StatusPrefix + "2-needs-review"
+	StatusNeedsMerge        = StatusPrefix + "3-needs-merge"
 )
 
 const (
-	ContributorWaitingForCorrections   = "contributor/waiting-for-corrections"
-	ContributorNeedMoreInformation     = "contributor/need-more-information"
-	ContributorWaitingForDocumentation = "contributor/waiting-for-documentation"
-	ContributorWaitingForFeedback      = "contributor/waiting-for-feedback"
+	ContributorPrefix                  = "contributor/"
+	ContributorWaitingForCorrections   = ContributorPrefix + "waiting-for-corrections"
+	ContributorNeedMoreInformation     = ContributorPrefix + "need-more-information"
+	ContributorWaitingForDocumentation = ContributorPrefix + "waiting-for-documentation"
+	ContributorWaitingForFeedback      = ContributorPrefix + "waiting-for-feedback"
 )
 
 const (

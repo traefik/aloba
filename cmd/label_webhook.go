@@ -57,7 +57,7 @@ func onPullRequestReview(client *github.Client, ctx context.Context, owner strin
 						return
 					}
 
-					if label.ExistsLabelWithPrefix(issue.Labels, label.ContributorWaitingForCorrections) {
+					if label.ExistsLabel(issue.Labels, label.ContributorWaitingForCorrections) {
 						return
 					}
 
@@ -79,19 +79,28 @@ func onPullRequestReview(client *github.Client, ctx context.Context, owner strin
 						return
 					}
 
-					if label.ExistsLabelWithPrefix(issue.Labels, label.ContributorWaitingForCorrections) {
-						if dryRun {
-							log.Printf("#%d: Remove %v\n", issue.GetNumber(), label.ContributorWaitingForCorrections)
-						} else {
-							_, err = client.Issues.RemoveLabelForIssue(ctx, owner, repositoryName, issue.GetNumber(), label.ContributorWaitingForCorrections)
-							if err != nil {
-								log.Println(err)
-								return
-							}
-						}
+					err = removeLabel(client, ctx, owner, repositoryName, issue, label.ContributorWaitingForCorrections, dryRun)
+					if err != nil {
+						log.Println(err)
+						return
 					}
 				}(event)
 			}
 		}
 	}
+}
+
+func removeLabel(client *github.Client, ctx context.Context, owner string, repositoryName string, issue *github.Issue, labelName string, dryRun bool) error {
+	if label.ExistsLabel(issue.Labels, labelName) {
+		if dryRun {
+			log.Printf("#%d: Remove %v\n", issue.GetNumber(), labelName)
+		} else {
+			_, err := client.Issues.RemoveLabelForIssue(ctx, owner, repositoryName, issue.GetNumber(), labelName)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }
