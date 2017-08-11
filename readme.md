@@ -1,5 +1,6 @@
 # Myrmica Aloba: Manage GitHub labels.
 
+[![Build Status](https://travis-ci.org/containous/aloba.svg?branch=master)](https://travis-ci.org/containous/aloba)
 
 ```
 Myrmica Aloba: Manage GitHub labels.
