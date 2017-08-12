@@ -1,5 +1,8 @@
 .idea/
 vendor/
 cover.out
+
 myrmica-aloba
 aloba
+rules.toml
+unsecure/
