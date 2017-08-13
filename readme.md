@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/containous/aloba.svg?branch=master)](https://travis-ci.org/containous/aloba)
 
-```
+```shell
 Myrmica Aloba: Manage GitHub labels.
 
 Usage: aloba [--flag=flag_argument] [-f[flag_argument]] ...     set flag_argument to flag(s)
@@ -18,7 +18,7 @@ Flags:
 ```
 
 Sub-command `label`:
-```
+```shell
 Add labels to Pull Request
 
 Usage: label [--flag=flag_argument] [-f[flag_argument]] ...     set flag_argument to flag(s)
@@ -37,7 +37,7 @@ Flags:
 ```
 
 Sub-command `report`:
-```
+```shell
 Create a report and publish on Slack.
 
 Usage: report [--flag=flag_argument] [-f[flag_argument]] ...     set flag_argument to flag(s)
@@ -61,12 +61,11 @@ Flags:
 ## Examples:
 
 Sub-command `label`:
-```bash
+```shell
 aloba label -o containous -r traefik --web-hook --github.token="xxxxxxxxxx"
 ```
 
-
 Sub-command `report`:
-```bash
+```shell
 aloba report -o containous -r traefik --github.token="xxxxxxxxxx" --slack.token="xxxxxxxxxx" --slack.channel=C0CDT22PJ
 ```
