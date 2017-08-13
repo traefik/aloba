@@ -39,7 +39,7 @@ func HasStatus(issueLabels []github.Label) bool {
 	return false
 }
 
-func ExistsLabel(issueLabels []github.Label, label string) bool {
+func HasLabel(issueLabels []github.Label, label string) bool {
 	for _, lbl := range issueLabels {
 		if lbl.GetName() == label {
 			return true

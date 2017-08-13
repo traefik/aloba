@@ -8,13 +8,6 @@ import (
 
 func SendToSlack(slackToken string, channelID string, iconEmoji string, botName string, model *model) error {
 
-	api := slack.New(slackToken)
-
-	ppm := slack.PostMessageParameters{
-		IconEmoji: iconEmoji,
-		Username:  botName,
-	}
-
 	msgParts := []string{}
 	if len(model.withReviews) != 0 {
 		msgParts = append(msgParts, "With reviews:", makeMessage(model.withReviews, false))
@@ -28,6 +21,13 @@ func SendToSlack(slackToken string, channelID string, iconEmoji string, botName 
 
 	if len(msgParts) != 0 {
 		message := strings.Join(msgParts, "\n")
+
+		api := slack.New(slackToken)
+
+		ppm := slack.PostMessageParameters{
+			IconEmoji: iconEmoji,
+			Username:  botName,
+		}
 
 		_, _, err := api.PostMessage(channelID, message, ppm)
 		if err != nil {

@@ -57,7 +57,7 @@ func onPullRequestReview(client *github.Client, ctx context.Context, owner strin
 						return
 					}
 
-					if label.ExistsLabel(issue.Labels, label.ContributorWaitingForCorrections) {
+					if label.HasLabel(issue.Labels, label.ContributorWaitingForCorrections) {
 						return
 					}
 
@@ -91,7 +91,7 @@ func onPullRequestReview(client *github.Client, ctx context.Context, owner strin
 }
 
 func removeLabel(client *github.Client, ctx context.Context, owner string, repositoryName string, issue *github.Issue, labelName string, dryRun bool) error {
-	if label.ExistsLabel(issue.Labels, labelName) {
+	if label.HasLabel(issue.Labels, labelName) {
 		if dryRun {
 			log.Printf("#%d: Remove %v\n", issue.GetNumber(), labelName)
 		} else {

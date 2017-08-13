@@ -86,7 +86,7 @@ func addLabelsToPR(client *github.Client, ctx context.Context, owner string, rep
 	// DIFF
 	addedLabels := []string{}
 	for _, lb := range labels {
-		if !label.ExistsLabel(issue.Labels, lb) {
+		if !label.HasLabel(issue.Labels, lb) {
 			addedLabels = append(addedLabels, lb)
 		}
 	}

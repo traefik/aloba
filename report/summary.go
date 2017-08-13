@@ -20,6 +20,7 @@ type prSummary struct {
 	ChangesRequested    []string
 	Size                string
 	Areas               []string
+	Milestone           string
 }
 
 func makePRSummaries(client *github.Client, ctx context.Context,
@@ -67,5 +68,6 @@ func newPRSummary(issue github.Issue, approved []string, requestChanges []string
 		Areas:               areas,
 		Size:                size,
 		ChangesRequested:    requestChanges,
+		Milestone:           issue.Milestone.GetTitle(),
 	}
 }

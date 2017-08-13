@@ -122,8 +122,9 @@ func makeMessage(summaries []prSummary, details bool) string {
 }
 
 func makeLine(summary prSummary, details bool) string {
-	line := fmt.Sprintf("- <https://github.com/containous/traefik/pull/%[1]d|#%[1]d>:", summary.Number)
+	line := fmt.Sprintf("<https://github.com/containous/traefik/pull/%[1]d|#%[1]d>:", summary.Number)
 	line += fmt.Sprintf(" %3d days,", summary.DaysBetweenCreation)
+
 	line += fmt.Sprintf(" %d LGTM", len(summary.Approved))
 	if details {
 		line += fmt.Sprintf(" %v", summary.Approved)
@@ -131,13 +132,18 @@ func makeLine(summary prSummary, details bool) string {
 	if len(summary.ChangesRequested) != 0 {
 		line += fmt.Sprintf(", changes requested by %v", summary.ChangesRequested)
 	}
+
 	line += fmt.Sprintf(" -")
+	if len(summary.Milestone) != 0 {
+		line += fmt.Sprintf(" (%s)", summary.Milestone)
+	}
 	if len(summary.Areas) != 0 {
 		line += fmt.Sprintf(" %v", summary.Areas)
 	}
 	if summary.Size != "" {
-		line += fmt.Sprintf("%7s", summary.Size)
+		line += fmt.Sprintf(" %7s", summary.Size)
 	}
+
 	line += fmt.Sprintf(" - _%s_", summary.Title)
 	line += fmt.Sprintln()
 
