@@ -8,23 +8,25 @@ import (
 	"github.com/containous/aloba/internal/gh"
 	"github.com/containous/aloba/internal/search"
 	"github.com/containous/aloba/label"
+	"github.com/containous/aloba/options"
 	"github.com/google/go-github/github"
 )
 
+// RulesConfiguration Stale issues rules configuration
 type RulesConfiguration struct {
 	Rules  []label.Rule
 	Limits label.Limits
 }
 
 // Label add labels to Pull Request
-func Label(options *LabelOptions) error {
+func Label(options *options.Label) error {
 
 	if options.Debug {
 		log.Println(options)
 	}
 
 	ctx := context.Background()
-	client := gh.NewGitHubClient(ctx, options.GitHubToken)
+	client := gh.NewGitHubClient(ctx, options.GitHub.Token)
 
 	rc := &RulesConfiguration{}
 	meta, err := toml.DecodeFile(options.RulesFilePath, rc)
@@ -37,12 +39,12 @@ func Label(options *LabelOptions) error {
 	}
 
 	if options.WebHook {
-		return runWebHook(client, ctx, options.Owner, options.RepositoryName, rc, options.DryRun)
+		return runWebHook(ctx, client, options.GitHub.Owner, options.GitHub.RepositoryName, rc, options.DryRun)
 	}
-	return runStandalone(client, ctx, options.Owner, options.RepositoryName, rc, options.DryRun)
+	return runStandalone(ctx, client, options.GitHub.Owner, options.GitHub.RepositoryName, rc, options.DryRun)
 }
 
-func runStandalone(client *github.Client, ctx context.Context, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) error {
+func runStandalone(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) error {
 	issues, err := search.FindOpenPR(ctx, client, owner, repositoryName,
 		search.WithExcludedLabels(
 			label.SizeLabelPrefix+label.Small,
@@ -54,7 +56,7 @@ func runStandalone(client *github.Client, ctx context.Context, owner string, rep
 	}
 
 	for _, issue := range issues {
-		err := addLabelsToPR(client, ctx, owner, repositoryName, issue, rc, dryRun)
+		err := addLabelsToPR(ctx, client, owner, repositoryName, issue, rc, dryRun)
 		if err != nil {
 			return err
 		}
@@ -63,19 +65,19 @@ func runStandalone(client *github.Client, ctx context.Context, owner string, rep
 	return nil
 }
 
-func addLabelsToPR(client *github.Client, ctx context.Context, owner string, repositoryName string, issue github.Issue, rc *RulesConfiguration, dryRun bool) error {
+func addLabelsToPR(ctx context.Context, client *github.Client, owner string, repositoryName string, issue github.Issue, rc *RulesConfiguration, dryRun bool) error {
 
 	labels := []string{}
 
 	// AREA
-	areas, err := label.DetectAreas(client, ctx, owner, repositoryName, issue.GetNumber(), rc.Rules)
+	areas, err := label.DetectAreas(ctx, client, owner, repositoryName, issue.GetNumber(), rc.Rules)
 	if err != nil {
 		return err
 	}
 	labels = append(labels, areas...)
 
 	// SIZE
-	sizeLabel, err := getSizeLabel(client, ctx, owner, repositoryName, issue, rc.Limits)
+	sizeLabel, err := getSizeLabel(ctx, client, owner, repositoryName, issue, rc.Limits)
 	if err != nil {
 		return err
 	}
@@ -111,7 +113,7 @@ func addLabelsToPR(client *github.Client, ctx context.Context, owner string, rep
 	return nil
 }
 
-func getSizeLabel(client *github.Client, ctx context.Context, owner string, repositoryName string, issue github.Issue, limits label.Limits) (string, error) {
+func getSizeLabel(ctx context.Context, client *github.Client, owner string, repositoryName string, issue github.Issue, limits label.Limits) (string, error) {
 	size, err := label.GetSizeLabel(client, ctx, owner, repositoryName, issue.GetNumber(), limits)
 	if err != nil {
 		return "", err

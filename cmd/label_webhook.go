@@ -12,10 +12,10 @@ import (
 	"github.com/ldez/ghwebhook/eventtype"
 )
 
-func runWebHook(client *github.Client, ctx context.Context, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) error {
+func runWebHook(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) error {
 	handlers := ghw.NewEventHandlers().
-		OnPullRequest(onPullRequest(client, ctx, owner, repositoryName, rc, dryRun)).
-		OnPullRequestReview(onPullRequestReview(client, ctx, owner, repositoryName, dryRun))
+		OnPullRequest(onPullRequest(ctx, client, owner, repositoryName, rc, dryRun)).
+		OnPullRequestReview(onPullRequestReview(ctx, client, owner, repositoryName, dryRun))
 
 	hook := ghw.NewWebHook(handlers, ghw.WithPort(5000), ghw.WithEventTypes(eventtype.PullRequest, eventtype.PullRequestReview))
 	err := hook.ListenAndServe()
@@ -26,7 +26,7 @@ func runWebHook(client *github.Client, ctx context.Context, owner string, reposi
 	return nil
 }
 
-func onPullRequest(client *github.Client, ctx context.Context, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) func(*github.WebHookPayload, *github.PullRequestEvent) {
+func onPullRequest(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) func(*github.WebHookPayload, *github.PullRequestEvent) {
 	return func(payload *github.WebHookPayload, event *github.PullRequestEvent) {
 		if event.GetAction() == "opened" {
 			go func(event *github.PullRequestEvent) {
@@ -36,7 +36,7 @@ func onPullRequest(client *github.Client, ctx context.Context, owner string, rep
 					return
 				}
 
-				err = addLabelsToPR(client, ctx, owner, repositoryName, *issue, rc, dryRun)
+				err = addLabelsToPR(ctx, client, owner, repositoryName, *issue, rc, dryRun)
 				if err != nil {
 					log.Println(err)
 				}
@@ -45,7 +45,7 @@ func onPullRequest(client *github.Client, ctx context.Context, owner string, rep
 	}
 }
 
-func onPullRequestReview(client *github.Client, ctx context.Context, owner string, repositoryName string, dryRun bool) func(*github.WebHookPayload, *github.PullRequestReviewEvent) {
+func onPullRequestReview(ctx context.Context, client *github.Client, owner string, repositoryName string, dryRun bool) func(*github.WebHookPayload, *github.PullRequestReviewEvent) {
 	return func(payload *github.WebHookPayload, event *github.PullRequestReviewEvent) {
 		if event.GetAction() == "submitted" {
 			if strings.ToUpper(event.Review.GetState()) == gh.ChangesRequested {
@@ -79,7 +79,7 @@ func onPullRequestReview(client *github.Client, ctx context.Context, owner strin
 						return
 					}
 
-					err = removeLabel(client, ctx, owner, repositoryName, issue, label.ContributorWaitingForCorrections, dryRun)
+					err = removeLabel(ctx, client, owner, repositoryName, issue, label.ContributorWaitingForCorrections, dryRun)
 					if err != nil {
 						log.Println(err)
 						return
@@ -90,7 +90,7 @@ func onPullRequestReview(client *github.Client, ctx context.Context, owner strin
 	}
 }
 
-func removeLabel(client *github.Client, ctx context.Context, owner string, repositoryName string, issue *github.Issue, labelName string, dryRun bool) error {
+func removeLabel(ctx context.Context, client *github.Client, owner string, repositoryName string, issue *github.Issue, labelName string, dryRun bool) error {
 	if label.HasLabel(issue.Labels, labelName) {
 		if dryRun {
 			log.Printf("#%d: Remove %v\n", issue.GetNumber(), labelName)

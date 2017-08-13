@@ -8,12 +8,14 @@ import (
 	"golang.org/x/oauth2"
 )
 
+// Review status
 const (
 	Approved         = "APPROVED"
 	ChangesRequested = "CHANGES_REQUESTED"
 	Commented        = "COMMENTED"
 )
 
+// NewGitHubClient create a new GitHub client
 func NewGitHubClient(ctx context.Context, token string) *github.Client {
 	var client *github.Client
 	if len(token) == 0 {
@@ -28,7 +30,8 @@ func NewGitHubClient(ctx context.Context, token string) *github.Client {
 	return client
 }
 
-func GetReviewStatus(client *github.Client, ctx context.Context, owner string, repositoryName string, members []*github.User, prNumber int) (map[string]string, map[string]string, error) {
+// GetReviewStatus get reviews status of a Pull Request
+func GetReviewStatus(ctx context.Context, client *github.Client, owner string, repositoryName string, members []*github.User, prNumber int) (map[string]string, map[string]string, error) {
 	opts := &github.ListOptions{
 		PerPage: 80,
 	}
@@ -58,8 +61,9 @@ func GetReviewStatus(client *github.Client, ctx context.Context, owner string, r
 	return approvedReviews, changesRequestedReviews, nil
 }
 
-func GetTeamMembers(client *github.Client, ctx context.Context, owner string, teamName string) ([]*github.User, error) {
-	team, err := getTeamByName(client, ctx, owner, teamName)
+// GetTeamMembers get members of a team
+func GetTeamMembers(ctx context.Context, client *github.Client, owner string, teamName string) ([]*github.User, error) {
+	team, err := getTeamByName(ctx, client, owner, teamName)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +79,7 @@ func GetTeamMembers(client *github.Client, ctx context.Context, owner string, te
 	return members, nil
 }
 
-func getTeamByName(client *github.Client, ctx context.Context, owner string, teamName string) (*github.Team, error) {
+func getTeamByName(ctx context.Context, client *github.Client, owner string, teamName string) (*github.Team, error) {
 	teams, _, err := client.Organizations.ListTeams(ctx, owner, nil)
 	if err != nil {
 		return nil, err
@@ -86,7 +90,7 @@ func getTeamByName(client *github.Client, ctx context.Context, owner string, tea
 			return team, nil
 		}
 	}
-	return nil, fmt.Errorf("team %q not found.", teamName)
+	return nil, fmt.Errorf("team %q not found", teamName)
 }
 
 func isTeamMember(members []*github.User, login string) bool {

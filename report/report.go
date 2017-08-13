@@ -11,7 +11,8 @@ import (
 	"github.com/google/go-github/github"
 )
 
-type model struct {
+// Model a report model
+type Model struct {
 	withReviews  []prSummary
 	noReviews    []prSummary
 	contrib      []prSummary
@@ -25,19 +26,20 @@ var loginMap = map[string]string{
 	"emilevauge":  "emile",
 }
 
-func MakeReport(client *github.Client, ctx context.Context, owner string, repositoryName string) (*model, error) {
+// MakeReport create a open PRs report model
+func MakeReport(ctx context.Context, client *github.Client, owner string, repositoryName string) (*Model, error) {
 
 	var err error
 
-	members, err := gh.GetTeamMembers(client, ctx, owner, teamName)
+	members, err := gh.GetTeamMembers(ctx, client, owner, teamName)
 	if err != nil {
 		return nil, err
 	}
 
-	rp := &model{}
+	rp := &Model{}
 
 	// reviews + status-2 + no contrib/
-	rp.withReviews, err = makePRSummaries(client, ctx, owner, repositoryName, members,
+	rp.withReviews, err = makePRSummaries(ctx, client, owner, repositoryName, members,
 		makeWithReview,
 		search.WithReview,
 		search.WithLabels(label.StatusNeedsReview),
@@ -54,7 +56,7 @@ func MakeReport(client *github.Client, ctx context.Context, owner string, reposi
 	}
 
 	// no review + status-2 + no contrib/
-	rp.noReviews, err = makePRSummaries(client, ctx, owner, repositoryName, nil,
+	rp.noReviews, err = makePRSummaries(ctx, client, owner, repositoryName, nil,
 		makeWithoutReview,
 		search.WithReviewNone,
 		search.WithLabels(label.StatusNeedsReview),
@@ -71,7 +73,7 @@ func MakeReport(client *github.Client, ctx context.Context, owner string, reposi
 	}
 
 	// contrib/
-	rp.contrib, err = makePRSummaries(client, ctx, owner, repositoryName, members,
+	rp.contrib, err = makePRSummaries(ctx, client, owner, repositoryName, members,
 		makeWithReview,
 		search.WithReview,
 		search.WithLabels(
@@ -83,7 +85,7 @@ func MakeReport(client *github.Client, ctx context.Context, owner string, reposi
 	}
 
 	// design review
-	rp.designReview, err = makePRSummaries(client, ctx, owner, repositoryName, nil,
+	rp.designReview, err = makePRSummaries(ctx, client, owner, repositoryName, nil,
 		makeWithoutReview,
 		search.WithLabels(label.StatusNeedsDesignReview),
 		search.WithExcludedLabels(label.WIP))
@@ -94,7 +96,8 @@ func MakeReport(client *github.Client, ctx context.Context, owner string, reposi
 	return rp, nil
 }
 
-func DisplayReport(rp *model) {
+// DisplayReport display a PRs report
+func DisplayReport(rp *Model) {
 	if len(rp.withReviews) != 0 {
 		fmt.Println("With reviews:")
 		fmt.Println(makeMessage(rp.withReviews, true))
@@ -150,9 +153,9 @@ func makeLine(summary prSummary, details bool) string {
 	return line
 }
 
-func makeWithReview(client *github.Client, ctx context.Context, owner string, repositoryName string, members []*github.User, issue github.Issue) prSummary {
+func makeWithReview(ctx context.Context, client *github.Client, owner string, repositoryName string, members []*github.User, issue github.Issue) prSummary {
 
-	approvedReviews, changesRequestedReviews, err := gh.GetReviewStatus(client, ctx, owner, repositoryName, members, issue.GetNumber())
+	approvedReviews, changesRequestedReviews, err := gh.GetReviewStatus(ctx, client, owner, repositoryName, members, issue.GetNumber())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -175,6 +178,6 @@ func makeWithReview(client *github.Client, ctx context.Context, owner string, re
 	return newPRSummary(issue, ar, crb)
 }
 
-func makeWithoutReview(_ *github.Client, _ context.Context, _ string, _ string, _ []*github.User, issue github.Issue) prSummary {
+func makeWithoutReview(_ context.Context, _ *github.Client, _ string, _ string, _ []*github.User, issue github.Issue) prSummary {
 	return newPRSummary(issue, nil, nil)
 }

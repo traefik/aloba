@@ -8,12 +8,14 @@ import (
 	"github.com/google/go-github/github"
 )
 
+// Rule Area rule
 type Rule struct {
 	Label string
 	Regex string
 }
 
-func DetectAreas(client *github.Client, ctx context.Context, owner string, repositoryName string, prNumber int, rules []Rule) ([]string, error) {
+// DetectAreas for a Pull Request
+func DetectAreas(ctx context.Context, client *github.Client, owner string, repositoryName string, prNumber int, rules []Rule) ([]string, error) {
 
 	areasMap := make(map[string]struct{})
 

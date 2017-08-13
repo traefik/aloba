@@ -3,10 +3,12 @@ package report
 import (
 	"strings"
 
+	"github.com/containous/aloba/options"
 	"github.com/nlopes/slack"
 )
 
-func SendToSlack(slackToken string, channelID string, iconEmoji string, botName string, model *model) error {
+// SendToSlack Create and send a report to Slack
+func SendToSlack(options *options.Slack, model *Model) error {
 
 	msgParts := []string{}
 	if len(model.withReviews) != 0 {
@@ -22,14 +24,14 @@ func SendToSlack(slackToken string, channelID string, iconEmoji string, botName 
 	if len(msgParts) != 0 {
 		message := strings.Join(msgParts, "\n")
 
-		api := slack.New(slackToken)
+		api := slack.New(options.Token)
 
 		ppm := slack.PostMessageParameters{
-			IconEmoji: iconEmoji,
-			Username:  botName,
+			IconEmoji: options.IconEmoji,
+			Username:  options.BotName,
 		}
 
-		_, _, err := api.PostMessage(channelID, message, ppm)
+		_, _, err := api.PostMessage(options.ChannelID, message, ppm)
 		if err != nil {
 			return err
 		}

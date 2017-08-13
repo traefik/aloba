@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/containous/aloba/cmd"
+	"github.com/containous/aloba/options"
 	"github.com/containous/flaeg"
 )
 
@@ -27,13 +28,13 @@ func main() {
 
 func createRootCommand() *flaeg.Command {
 
-	emptyConfig := &cmd.NoOption{}
+	emptyConfig := &options.Empty{}
 
 	rootCmd := &flaeg.Command{
 		Name:                  "aloba",
 		Description:           "Myrmica Aloba: Manage GitHub labels.",
 		Config:                emptyConfig,
-		DefaultPointersConfig: &cmd.NoOption{},
+		DefaultPointersConfig: &options.Empty{},
 		Run: func() error {
 			// No op
 			return nil
@@ -45,27 +46,30 @@ func createRootCommand() *flaeg.Command {
 
 func createReportCommand() *flaeg.Command {
 
-	reportOptions := &cmd.ReportOptions{
-		IconEmoji: ":captainpr:",
-		BotName:   "CaptainPR",
-		DryRun:    true,
+	reportOptions := &options.Report{
+		Slack: &options.Slack{
+			IconEmoji: ":captainpr:",
+			BotName:   "CaptainPR",
+		},
+		DryRun: true,
 	}
 
 	reportCmd := &flaeg.Command{
 		Name:                  "report",
 		Description:           "Create a report and publish on Slack.",
 		Config:                reportOptions,
-		DefaultPointersConfig: &cmd.ReportOptions{},
+		DefaultPointersConfig: &options.Report{Slack: &options.Slack{}, GitHub: &options.GitHub{}},
 	}
 	reportCmd.Run = func() error {
 		if reportOptions.DryRun {
 			log.Print("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
 		}
-		required(reportOptions.GitHubToken, "github-token")
-		required(reportOptions.Owner, "owner")
-		required(reportOptions.RepositoryName, "repo-name")
-		required(reportOptions.SlackToken, "slack-token")
-		required(reportOptions.ChannelID, "channel-id")
+		required(reportOptions.GitHub.Token, "github.token")
+		required(reportOptions.GitHub.Owner, "github.owner")
+		required(reportOptions.GitHub.RepositoryName, "github.repo-name")
+		// FIXME
+		required(reportOptions.Slack.Token, "slack.token")
+		required(reportOptions.Slack.ChannelID, "slack.channel")
 
 		err := cmd.Report(reportOptions)
 		if err != nil {
@@ -79,7 +83,7 @@ func createReportCommand() *flaeg.Command {
 
 func createLabelCommand() *flaeg.Command {
 
-	labelOptions := &cmd.LabelOptions{
+	labelOptions := &options.Label{
 		RulesFilePath: "./rules.toml",
 		DryRun:        true,
 	}
@@ -88,15 +92,15 @@ func createLabelCommand() *flaeg.Command {
 		Name:                  "label",
 		Description:           "Add labels to Pull Request",
 		Config:                labelOptions,
-		DefaultPointersConfig: &cmd.LabelOptions{},
+		DefaultPointersConfig: &options.Label{GitHub: &options.GitHub{}},
 	}
 	labelCmd.Run = func() error {
 		if labelOptions.DryRun {
 			log.Print("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
 		}
-		required(labelOptions.GitHubToken, "github-token")
-		required(labelOptions.Owner, "owner")
-		required(labelOptions.RepositoryName, "repo-name")
+		required(labelOptions.GitHub.Token, "github.token")
+		required(labelOptions.GitHub.Owner, "github.owner")
+		required(labelOptions.GitHub.RepositoryName, "github.repo-name")
 		required(labelOptions.RulesFilePath, "rules-path")
 
 		err := cmd.Label(labelOptions)
