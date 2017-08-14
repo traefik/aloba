@@ -49,10 +49,11 @@ func newPRSummary(issue github.Issue, approved []string, requestChanges []string
 	var areas []string
 	var size string
 	for _, lbl := range issue.Labels {
-		if strings.HasPrefix(lbl.GetName(), "area/") {
+		if !strings.HasPrefix(lbl.GetName(), "area/infrastructure") ||  strings.HasPrefix(lbl.GetName(), "kind/bug/") {
 			area := strings.TrimPrefix(lbl.GetName(), "area/")
 			area = strings.TrimPrefix(area, "provider/")
 			area = strings.TrimPrefix(area, "middleware/")
+			area = strings.TrimPrefix(area, "kind/")
 			areas = append(areas, area)
 		}
 		if strings.HasPrefix(lbl.GetName(), label.SizeLabelPrefix) {
