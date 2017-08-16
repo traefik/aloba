@@ -64,6 +64,11 @@ func createReportCommand() *flaeg.Command {
 		if reportOptions.DryRun {
 			log.Print("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
 		}
+
+		if len(reportOptions.GitHub.Token) == 0 {
+			reportOptions.GitHub.Token = os.Getenv("GITHUB_TOKEN")
+		}
+
 		required(reportOptions.GitHub.Token, "github.token")
 		required(reportOptions.GitHub.Owner, "github.owner")
 		required(reportOptions.GitHub.RepositoryName, "github.repo-name")
@@ -98,6 +103,11 @@ func createLabelCommand() *flaeg.Command {
 		if labelOptions.DryRun {
 			log.Print("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
 		}
+
+		if len(labelOptions.GitHub.Token) == 0 {
+			labelOptions.GitHub.Token = os.Getenv("GITHUB_TOKEN")
+		}
+
 		required(labelOptions.GitHub.Token, "github.token")
 		required(labelOptions.GitHub.Owner, "github.owner")
 		required(labelOptions.GitHub.RepositoryName, "github.repo-name")
