@@ -51,7 +51,8 @@ func createReportCommand() *flaeg.Command {
 			IconEmoji: ":captainpr:",
 			BotName:   "CaptainPR",
 		},
-		DryRun: true,
+		DryRun:     true,
+		ServerPort: 80,
 	}
 
 	reportCmd := &flaeg.Command{
@@ -72,7 +73,6 @@ func createReportCommand() *flaeg.Command {
 		required(reportOptions.GitHub.Token, "github.token")
 		required(reportOptions.GitHub.Owner, "github.owner")
 		required(reportOptions.GitHub.RepositoryName, "github.repo-name")
-		// FIXME
 		required(reportOptions.Slack.Token, "slack.token")
 		required(reportOptions.Slack.ChannelID, "slack.channel")
 

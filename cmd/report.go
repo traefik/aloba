@@ -10,6 +10,15 @@ import (
 
 // Report create a report and publish on Slack
 func Report(options *options.Report) error {
+	if options.ServerMode {
+		server := &server{options: options}
+		return server.ListenAndServe()
+	}
+
+	return launch(options)
+}
+
+func launch(options *options.Report) error {
 	ctx := context.Background()
 	client := gh.NewGitHubClient(ctx, options.GitHub.Token)
 

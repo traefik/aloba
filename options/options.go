@@ -5,10 +5,12 @@ type Empty struct{}
 
 // Report options
 type Report struct {
-	Debug  bool    `description:"Debug mode."`
-	DryRun bool    `long:"dry-run" description:"Dry run mode."`
-	GitHub *GitHub `description:"GitHub options."`
-	Slack  *Slack  `description:"Slack options."`
+	Debug      bool    `description:"Debug mode."`
+	DryRun     bool    `long:"dry-run" description:"Dry run mode."`
+	ServerMode bool    `long:"server" description:"Server mode."`
+	ServerPort int     `long:"port" description:"Server port."`
+	GitHub     *GitHub `description:"GitHub options."`
+	Slack      *Slack  `description:"Slack options."`
 }
 
 // Slack options
