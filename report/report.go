@@ -137,16 +137,15 @@ func makeLine(summary prSummary, details bool) string {
 	}
 
 	line += fmt.Sprintf(" -")
+	if summary.Size != "" {
+		line += fmt.Sprintf(" %s", summary.Size)
+	}
 	if len(summary.Milestone) != 0 {
 		line += fmt.Sprintf(" (%s)", summary.Milestone)
 	}
 	if len(summary.Areas) != 0 {
 		line += fmt.Sprintf(" %v", summary.Areas)
 	}
-	if summary.Size != "" {
-		line += fmt.Sprintf(" %7s", summary.Size)
-	}
-
 	line += fmt.Sprintf(" - _%s_", summary.Title)
 	line += fmt.Sprintln()
 
