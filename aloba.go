@@ -70,6 +70,10 @@ func createReportCommand() *flaeg.Command {
 			reportOptions.GitHub.Token = os.Getenv("GITHUB_TOKEN")
 		}
 
+		if len(reportOptions.Slack.Token) == 0 {
+			reportOptions.Slack.Token = os.Getenv("SLACK_TOKEN")
+		}
+
 		required(reportOptions.GitHub.Token, "github.token")
 		required(reportOptions.GitHub.Owner, "github.owner")
 		required(reportOptions.GitHub.RepositoryName, "github.repo-name")
