@@ -1,6 +1,8 @@
 # Myrmica Aloba: Manage GitHub labels.
 
 [![Build Status](https://travis-ci.org/containous/aloba.svg?branch=master)](https://travis-ci.org/containous/aloba)
+[![Docker Build Status](https://img.shields.io/docker/build/containous/aloba.svg)](https://hub.docker.com/r/containous/aloba/builds/)
+
 
 ```shell
 Myrmica Aloba: Manage GitHub labels.
