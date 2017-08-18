@@ -32,20 +32,28 @@ func NewGitHubClient(ctx context.Context, token string) *github.Client {
 
 // GetReviewStatus get reviews status of a Pull Request
 func GetReviewStatus(ctx context.Context, client *github.Client, owner string, repositoryName string, members []*github.User, prNumber int) (map[string]string, map[string]string, error) {
-	opts := &github.ListOptions{
-		PerPage: 80,
-	}
 
-	reviews, _, err := client.PullRequests.ListReviews(ctx, owner, repositoryName, prNumber, opts)
-	if err != nil {
-		return nil, nil, err
+	opts := &github.ListOptions{
+		PerPage: 100,
 	}
 
 	uniqueReviews := make(map[string]string)
-	for _, review := range reviews {
-		if review.GetState() != Commented && isTeamMember(members, review.User.GetLogin()) {
-			uniqueReviews[review.User.GetLogin()] = review.GetState()
+
+	for {
+		reviews, resp, err := client.PullRequests.ListReviews(ctx, owner, repositoryName, prNumber, opts)
+		if err != nil {
+			return nil, nil, err
 		}
+
+		for _, review := range reviews {
+			if review.GetState() != Commented && isTeamMember(members, review.User.GetLogin()) {
+				uniqueReviews[review.User.GetLogin()] = review.GetState()
+			}
+		}
+		if resp.NextPage == 0 {
+			break
+		}
+		opts.Page = resp.NextPage
 	}
 
 	approvedReviews := make(map[string]string)
