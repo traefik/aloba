@@ -16,6 +16,7 @@ func (a byCreated) Less(i, j int) bool {
 	return a[i].GetCreatedAt().Before(a[j].GetCreatedAt())
 }
 
+// FindOpenPR search and find open Pull Requests.
 func FindOpenPR(ctx context.Context, client *github.Client, owner string, repositoryName string, parameters ...Parameter) ([]github.Issue, error) {
 
 	var filter string
@@ -50,9 +51,7 @@ func findIssues(ctx context.Context, client *github.Client, query string, search
 		if err != nil {
 			return nil, err
 		}
-		for _, issue := range issuesSearchResult.Issues {
-			allIssues = append(allIssues, issue)
-		}
+		allIssues = append(allIssues, issuesSearchResult.Issues...)
 		if resp.NextPage == 0 {
 			break
 		}

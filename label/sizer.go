@@ -7,17 +7,20 @@ import (
 	"github.com/google/go-github/github"
 )
 
+// Limits a set of Pull request limits by size.
 type Limits struct {
 	Small  Limit
 	Medium Limit
 }
 
+// Limit a set of Pull request limits.
 type Limit struct {
 	SumLimit   int
 	DiffLimit  int
 	FilesLimit int
 }
 
+// Changes represent the changes of a Pull Request.
 type Changes struct {
 	Number       int
 	AdditionSum  int
@@ -25,7 +28,7 @@ type Changes struct {
 	ChangedFiles int
 }
 
-// GetCurrentSize
+// GetCurrentSize get the size of a Pull Request.
 func GetCurrentSize(issueLabels []github.Label) string {
 	for _, lbl := range issueLabels {
 		if strings.HasPrefix(lbl.GetName(), SizeLabelPrefix) {
@@ -36,8 +39,8 @@ func GetCurrentSize(issueLabels []github.Label) string {
 }
 
 // GetSizeLabel evaluate PR size (exclude vendor files)
-func GetSizeLabel(client *github.Client, ctx context.Context, owner string, repositoryName string, prNumber int, limits Limits) (string, error) {
-	changes, err := calculateChanges(client, ctx, owner, repositoryName, prNumber)
+func GetSizeLabel(ctx context.Context, client *github.Client, owner string, repositoryName string, prNumber int, limits Limits) (string, error) {
+	changes, err := calculateChanges(ctx, client, owner, repositoryName, prNumber)
 	if err != nil {
 		return "", err
 	}
@@ -46,7 +49,7 @@ func GetSizeLabel(client *github.Client, ctx context.Context, owner string, repo
 }
 
 // calculateChanges count changes (exclude vendor files)
-func calculateChanges(client *github.Client, ctx context.Context, owner string, repositoryName string, prNumber int) (*Changes, error) {
+func calculateChanges(ctx context.Context, client *github.Client, owner string, repositoryName string, prNumber int) (*Changes, error) {
 
 	changes := &Changes{
 		Number: prNumber,
@@ -65,7 +68,7 @@ func calculateChanges(client *github.Client, ctx context.Context, owner string, 
 		for _, cf := range cfs {
 
 			if !strings.HasPrefix(cf.GetFilename(), "vendor/") && cf.GetFilename() != "glide.lock" && cf.GetFilename() != "glide.yml" {
-				changes.ChangedFiles += 1
+				changes.ChangedFiles++
 				changes.AdditionSum += cf.GetAdditions()
 				changes.DeletionSum += cf.GetDeletions()
 			}

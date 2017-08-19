@@ -63,7 +63,7 @@ func TestHasLabel(t *testing.T) {
 			result := HasLabel(test.labels, test.label)
 
 			if result != test.expectedResult {
-				t.Errorf("Got %s, want %s", result, test.expectedResult)
+				t.Errorf("Got %t, want %t", result, test.expectedResult)
 			}
 		})
 	}
@@ -129,7 +129,7 @@ func TestHasStatus(t *testing.T) {
 			result := HasStatus(test.labels)
 
 			if result != test.expectedResult {
-				t.Errorf("Got %s, want %s", result, test.expectedResult)
+				t.Errorf("Got %t, want %t", result, test.expectedResult)
 			}
 		})
 	}

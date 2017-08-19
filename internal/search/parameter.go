@@ -31,10 +31,12 @@ func WithReviewApproved() string {
 	return " review:approved "
 }
 
+// WithReviewNone add a search filter by PR with none review.
 func WithReviewNone() string {
 	return " review:none "
 }
 
+// WithReview add a search filter by PR with review.
 func WithReview() string {
 	return " -review:none "
 }

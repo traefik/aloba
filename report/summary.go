@@ -64,7 +64,7 @@ func newPRSummary(issue github.Issue, approved []string, requestChanges []string
 	return prSummary{
 		Number:              issue.GetNumber(),
 		Title:               issue.GetTitle(),
-		DaysBetweenCreation: int(math.Floor(time.Now().Sub(issue.GetCreatedAt()).Hours() / 24)),
+		DaysBetweenCreation: int(math.Floor(time.Since(issue.GetCreatedAt()).Hours() / 24)),
 		Approved:            approved,
 		Areas:               areas,
 		Size:                size,

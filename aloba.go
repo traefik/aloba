@@ -74,13 +74,28 @@ func createReportCommand() *flaeg.Command {
 			reportOptions.Slack.Token = os.Getenv("SLACK_TOKEN")
 		}
 
-		required(reportOptions.GitHub.Token, "github.token")
-		required(reportOptions.GitHub.Owner, "github.owner")
-		required(reportOptions.GitHub.RepositoryName, "github.repo-name")
-		required(reportOptions.Slack.Token, "slack.token")
-		required(reportOptions.Slack.ChannelID, "slack.channel")
+		err := required(reportOptions.GitHub.Token, "github.token")
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = required(reportOptions.GitHub.Owner, "github.owner")
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = required(reportOptions.GitHub.RepositoryName, "github.repo-name")
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = required(reportOptions.Slack.Token, "slack.token")
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = required(reportOptions.Slack.ChannelID, "slack.channel")
+		if err != nil {
+			log.Fatal(err)
+		}
 
-		err := cmd.Report(reportOptions)
+		err = cmd.Report(reportOptions)
 		if err != nil {
 			log.Println(err)
 		}
@@ -112,12 +127,24 @@ func createLabelCommand() *flaeg.Command {
 			labelOptions.GitHub.Token = os.Getenv("GITHUB_TOKEN")
 		}
 
-		required(labelOptions.GitHub.Token, "github.token")
-		required(labelOptions.GitHub.Owner, "github.owner")
-		required(labelOptions.GitHub.RepositoryName, "github.repo-name")
-		required(labelOptions.RulesFilePath, "rules-path")
+		err := required(labelOptions.GitHub.Token, "github.token")
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = required(labelOptions.GitHub.Owner, "github.owner")
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = required(labelOptions.GitHub.RepositoryName, "github.repo-name")
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = required(labelOptions.RulesFilePath, "rules-path")
+		if err != nil {
+			log.Fatal(err)
+		}
 
-		err := cmd.Label(labelOptions)
+		err = cmd.Label(labelOptions)
 		if err != nil {
 			log.Println(err)
 		}

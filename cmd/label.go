@@ -114,7 +114,7 @@ func addLabelsToPR(ctx context.Context, client *github.Client, owner string, rep
 }
 
 func getSizeLabel(ctx context.Context, client *github.Client, owner string, repositoryName string, issue github.Issue, limits label.Limits) (string, error) {
-	size, err := label.GetSizeLabel(client, ctx, owner, repositoryName, issue.GetNumber(), limits)
+	size, err := label.GetSizeLabel(ctx, client, owner, repositoryName, issue.GetNumber(), limits)
 	if err != nil {
 		return "", err
 	}
