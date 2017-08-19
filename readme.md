@@ -34,7 +34,9 @@ Flags:
 -r, --github.repo-name Repository name.
     --github.token     GitHub token.
     --rules-path       Path to the rule file.             (default "./rules.toml")
-    --web-hook         Run as WebHook.                    (default "false")
+    --web-hook         Run as WebHook.                    (default "true")
+    --web-hook.port    WebHook port.                      (default "80")
+    --web-hook.secret  WebHook secret.
 -h, --help             Print Help (this message) and exit
 ```
 

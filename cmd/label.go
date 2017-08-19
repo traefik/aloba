@@ -38,10 +38,10 @@ func Label(options *options.Label) error {
 		log.Printf("Rules: %+v\n", meta)
 	}
 
-	if options.WebHook {
-		return runWebHook(ctx, client, options.GitHub.Owner, options.GitHub.RepositoryName, rc, options.DryRun)
+	if options.WebHook == nil {
+		return runStandalone(ctx, client, options.GitHub.Owner, options.GitHub.RepositoryName, rc, options.DryRun)
 	}
-	return runStandalone(ctx, client, options.GitHub.Owner, options.GitHub.RepositoryName, rc, options.DryRun)
+	return runWebHook(ctx, client, options.GitHub.Owner, options.GitHub.RepositoryName, rc, options.WebHook, options.DryRun)
 }
 
 func runStandalone(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) error {

@@ -7,23 +7,22 @@ import (
 
 	"github.com/containous/aloba/internal/gh"
 	"github.com/containous/aloba/label"
+	"github.com/containous/aloba/options"
 	"github.com/google/go-github/github"
 	ghw "github.com/ldez/ghwebhook"
 	"github.com/ldez/ghwebhook/eventtype"
 )
 
-func runWebHook(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) error {
+func runWebHook(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, opts *options.WebHook, dryRun bool) error {
 	handlers := ghw.NewEventHandlers().
 		OnPullRequest(onPullRequest(ctx, client, owner, repositoryName, rc, dryRun)).
 		OnPullRequestReview(onPullRequestReview(ctx, client, owner, repositoryName, dryRun))
 
-	hook := ghw.NewWebHook(handlers, ghw.WithPort(5000), ghw.WithEventTypes(eventtype.PullRequest, eventtype.PullRequestReview))
-	err := hook.ListenAndServe()
-	if err != nil {
-		return err
-	}
-
-	return nil
+	hook := ghw.NewWebHook(handlers,
+		ghw.WithPort(opts.Port),
+		ghw.WithSecret(opts.Secret),
+		ghw.WithEventTypes(eventtype.PullRequest, eventtype.PullRequestReview))
+	return hook.ListenAndServe()
 }
 
 func onPullRequest(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) func(*github.WebHookPayload, *github.PullRequestEvent) {

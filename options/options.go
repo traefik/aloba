@@ -30,9 +30,15 @@ type GitHub struct {
 
 // Label options
 type Label struct {
-	Debug         bool    `description:"Debug mode."`
-	DryRun        bool    `long:"dry-run" description:"Dry run mode."`
-	WebHook       bool    `long:"web-hook" description:"Run as WebHook."`
-	RulesFilePath string  `long:"rules-path" description:"Path to the rule file."`
-	GitHub        *GitHub `description:"GitHub options."`
+	Debug         bool     `description:"Debug mode."`
+	DryRun        bool     `long:"dry-run" description:"Dry run mode."`
+	WebHook       *WebHook `long:"web-hook" description:"Run as WebHook."`
+	RulesFilePath string   `long:"rules-path" description:"Path to the rule file."`
+	GitHub        *GitHub  `description:"GitHub options."`
+}
+
+// WebHook options
+type WebHook struct {
+	Port   int    `description:"WebHook port."`
+	Secret string `description:"WebHook secret."`
 }

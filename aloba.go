@@ -112,12 +112,20 @@ func createLabelCommand() *flaeg.Command {
 		DryRun:        true,
 	}
 
+	defaultPointerOptions := &options.Label{
+		GitHub: &options.GitHub{},
+		WebHook: &options.WebHook{
+			Port: 80,
+		},
+	}
+
 	labelCmd := &flaeg.Command{
 		Name:                  "label",
 		Description:           "Add labels to Pull Request",
 		Config:                labelOptions,
-		DefaultPointersConfig: &options.Label{GitHub: &options.GitHub{}},
+		DefaultPointersConfig: defaultPointerOptions,
 	}
+
 	labelCmd.Run = func() error {
 		if labelOptions.DryRun {
 			log.Print("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
