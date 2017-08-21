@@ -135,6 +135,10 @@ func createLabelCommand() *flaeg.Command {
 			labelOptions.GitHub.Token = os.Getenv("GITHUB_TOKEN")
 		}
 
+		if labelOptions.WebHook != nil && len(labelOptions.WebHook.Secret) == 0 {
+			labelOptions.WebHook.Secret = os.Getenv("WEBHOOK_SECRET")
+		}
+
 		err := required(labelOptions.GitHub.Token, "github.token")
 		if err != nil {
 			log.Fatal(err)
