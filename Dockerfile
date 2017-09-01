@@ -1,4 +1,4 @@
-FROM golang:1-alpine
+FROM golang:1-alpine as builder
 
 RUN apk --update upgrade \
 && apk --no-cache --no-progress add git make \
@@ -11,4 +11,7 @@ RUN go get -u github.com/golang/dep/cmd/dep
 RUN make dependencies
 RUN make build
 
+FROM alpine:3.6
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=builder /go/src/github.com/containous/aloba/aloba .
 CMD ["./aloba", "-h"]
