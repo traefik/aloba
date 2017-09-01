@@ -24,6 +24,17 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	values := r.URL.Query()
+	channel, ok := values["channel"]
+	if ok {
+		s.options.Slack.ChannelID = channel[0]
+	}
+	if len(s.options.Slack.ChannelID) == 0 {
+		log.Printf("Slack channel is mandatory.")
+		http.Error(w, "Slack channel is mandatory.", http.StatusBadRequest)
+		return
+	}
+
 	err := launch(s.options)
 	if err != nil {
 		log.Printf("Report error: %v", err)

@@ -90,9 +90,12 @@ func createReportCommand() *flaeg.Command {
 		if err != nil {
 			log.Fatal(err)
 		}
-		err = required(reportOptions.Slack.ChannelID, "slack.channel")
-		if err != nil {
-			log.Fatal(err)
+
+		if !reportOptions.ServerMode {
+			errSlackChan := required(reportOptions.Slack.ChannelID, "slack.channel")
+			if errSlackChan != nil {
+				log.Fatal(errSlackChan)
+			}
 		}
 
 		err = cmd.Report(reportOptions)
