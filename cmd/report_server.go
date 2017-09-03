@@ -24,6 +24,7 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ChannelIDOld := s.options.Slack.ChannelID
 	values := r.URL.Query()
 	channel, ok := values["channel"]
 	if ok {
@@ -36,6 +37,9 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err := launch(s.options)
+	if ok {
+		s.options.Slack.ChannelID = ChannelIDOld
+	}
 	if err != nil {
 		log.Printf("Report error: %v", err)
 		http.Error(w, "Report error.", http.StatusInternalServerError)
