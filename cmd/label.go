@@ -8,6 +8,7 @@ import (
 	"github.com/containous/aloba/internal/gh"
 	"github.com/containous/aloba/internal/search"
 	"github.com/containous/aloba/label"
+	"github.com/containous/aloba/milestone"
 	"github.com/containous/aloba/options"
 	"github.com/google/go-github/github"
 )
@@ -60,8 +61,36 @@ func runStandalone(ctx context.Context, client *github.Client, owner string, rep
 		if err != nil {
 			return err
 		}
+		if issue.Milestone == nil {
+			pr, _, err := client.PullRequests.Get(ctx, owner, repositoryName, issue.GetNumber())
+			if err != nil {
+				return err
+			}
+			err = addMilestoneToPR(ctx, client, owner, repositoryName, pr)
+			if err != nil {
+				return err
+			}
+		}
 	}
 
+	return nil
+}
+
+func addMilestoneToPR(ctx context.Context, client *github.Client, owner, repoName string, pr *github.PullRequest) error {
+	meta, err := milestone.Detect(ctx, client, owner, repoName, pr)
+	if err != nil {
+		return err
+	}
+
+	if pr.Milestone == nil && meta != nil {
+		ir := &github.IssueRequest{
+			Milestone: github.Int(meta.ID),
+		}
+		_, _, errMil := client.Issues.Edit(ctx, owner, repoName, pr.GetNumber(), ir)
+		if errMil != nil {
+			return errMil
+		}
+	}
 	return nil
 }
 

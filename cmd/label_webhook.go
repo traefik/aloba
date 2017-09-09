@@ -39,6 +39,13 @@ func onPullRequest(ctx context.Context, client *github.Client, owner string, rep
 				if err != nil {
 					log.Println(err)
 				}
+
+				if event.PullRequest.Milestone == nil {
+					err = addMilestoneToPR(ctx, client, owner, repositoryName, event.PullRequest)
+					if err != nil {
+						log.Println(err)
+					}
+				}
 			}(event)
 		}
 	}
