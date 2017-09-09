@@ -74,28 +74,9 @@ func createReportCommand() *flaeg.Command {
 			reportOptions.Slack.Token = os.Getenv("SLACK_TOKEN")
 		}
 
-		err := required(reportOptions.GitHub.Token, "github.token")
+		err := validateReportOptions(reportOptions)
 		if err != nil {
 			log.Fatal(err)
-		}
-		err = required(reportOptions.GitHub.Owner, "github.owner")
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = required(reportOptions.GitHub.RepositoryName, "github.repo-name")
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = required(reportOptions.Slack.Token, "slack.token")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if !reportOptions.ServerMode {
-			errSlackChan := required(reportOptions.Slack.ChannelID, "slack.channel")
-			if errSlackChan != nil {
-				log.Fatal(errSlackChan)
-			}
 		}
 
 		err = cmd.Report(reportOptions)
@@ -142,19 +123,7 @@ func createLabelCommand() *flaeg.Command {
 			labelOptions.WebHook.Secret = os.Getenv("WEBHOOK_SECRET")
 		}
 
-		err := required(labelOptions.GitHub.Token, "github.token")
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = required(labelOptions.GitHub.Owner, "github.owner")
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = required(labelOptions.GitHub.RepositoryName, "github.repo-name")
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = required(labelOptions.RulesFilePath, "rules-path")
+		err := validateLabelOptions(labelOptions)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -174,4 +143,47 @@ func required(field string, fieldName string) error {
 		log.Fatalf("%s is mandatory.", fieldName)
 	}
 	return nil
+}
+
+func validateReportOptions(reportOptions *options.Report) error {
+	err := required(reportOptions.GitHub.Token, "github.token")
+	if err != nil {
+		return err
+	}
+	err = required(reportOptions.GitHub.Owner, "github.owner")
+	if err != nil {
+		return err
+	}
+	err = required(reportOptions.GitHub.RepositoryName, "github.repo-name")
+	if err != nil {
+		return err
+	}
+	err = required(reportOptions.Slack.Token, "slack.token")
+	if err != nil {
+		return err
+	}
+
+	if !reportOptions.ServerMode {
+		errSlackChan := required(reportOptions.Slack.ChannelID, "slack.channel")
+		if errSlackChan != nil {
+			return errSlackChan
+		}
+	}
+	return nil
+}
+
+func validateLabelOptions(labelOptions *options.Label) error {
+	err := required(labelOptions.GitHub.Token, "github.token")
+	if err != nil {
+		return err
+	}
+	err = required(labelOptions.GitHub.Owner, "github.owner")
+	if err != nil {
+		return err
+	}
+	err = required(labelOptions.GitHub.RepositoryName, "github.repo-name")
+	if err != nil {
+		return err
+	}
+	return required(labelOptions.RulesFilePath, "rules-path")
 }
