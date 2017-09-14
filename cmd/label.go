@@ -128,7 +128,7 @@ func addLabelsToPR(ctx context.Context, client *github.Client, owner string, rep
 	}
 
 	if len(addedLabels) == 0 {
-		log.Println("no new labels")
+		log.Printf("#%d: No new labels", issue.GetNumber())
 	} else {
 		if dryRun {
 			log.Printf("#%d: %v - %s\n", issue.GetNumber(), addedLabels, issue.GetTitle())
