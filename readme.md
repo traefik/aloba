@@ -73,3 +73,5 @@ Sub-command `report`:
 ```shell
 aloba report -o containous -r traefik --github.token="xxxxxxxxxx" --slack.token="xxxxxxxxxx" --slack.channel=C0CDT22PJ
 ```
+
+![Myrmica Aloba](http://www.antwiki.org/wiki/images/8/8c/Myrmica_aloba_H_casent0907652.jpg)
