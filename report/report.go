@@ -161,7 +161,7 @@ func makeWithReview(ctx context.Context, client *github.Client, owner string, re
 		log.Fatal(err)
 	}
 
-	crb := []string{}
+	var crb []string
 	for gitHubLogin := range changesRequestedReviews {
 		slackLogin, ok := loginMap[gitHubLogin]
 		if !ok {
@@ -171,7 +171,7 @@ func makeWithReview(ctx context.Context, client *github.Client, owner string, re
 		crb = append(crb, fmt.Sprintf("<@%s>", slackLogin))
 	}
 
-	ar := []string{}
+	var ar []string
 	for gitHubLogin := range approvedReviews {
 		ar = append(ar, gitHubLogin)
 	}

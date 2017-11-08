@@ -59,7 +59,7 @@ func Detect(ctx context.Context, client *github.Client, owner, repoName string, 
 }
 
 func makeMetas(stones []*github.Milestone) []*MetaMilestone {
-	metas := []*MetaMilestone{}
+	var metas []*MetaMilestone
 
 	for _, ml := range stones {
 		weight, errWeight := weightCalculator(ml)

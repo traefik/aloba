@@ -96,7 +96,7 @@ func addMilestoneToPR(ctx context.Context, client *github.Client, owner, repoNam
 
 func addLabelsToPR(ctx context.Context, client *github.Client, owner string, repositoryName string, issue github.Issue, rc *RulesConfiguration, dryRun bool) error {
 
-	labels := []string{}
+	var labels []string
 
 	// AREA
 	areas, err := label.DetectAreas(ctx, client, owner, repositoryName, issue.GetNumber(), rc.Rules)
@@ -115,7 +115,7 @@ func addLabelsToPR(ctx context.Context, client *github.Client, owner string, rep
 	}
 
 	// DIFF
-	addedLabels := []string{}
+	var addedLabels []string
 	for _, lb := range labels {
 		if !label.HasLabel(issue.Labels, lb) {
 			addedLabels = append(addedLabels, lb)

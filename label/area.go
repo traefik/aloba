@@ -43,7 +43,7 @@ func DetectAreas(ctx context.Context, client *github.Client, owner string, repos
 		opt.Page = resp.NextPage
 	}
 
-	areas := []string{}
+	var areas []string
 
 	for area := range areasMap {
 		areas = append(areas, area)

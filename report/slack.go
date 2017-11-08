@@ -31,7 +31,7 @@ func postSlackMessage(options *options.Slack, message string) error {
 }
 
 func makeSlackMessage(model *Model) string {
-	msgParts := []string{}
+	var msgParts []string
 
 	if len(model.withReviews) != 0 {
 		msgParts = append(msgParts, "*With reviews:*", makeMessage(model.withReviews, false))

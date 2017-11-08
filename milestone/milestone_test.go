@@ -1,9 +1,8 @@
 package milestone
 
 import (
-	"testing"
-
 	"reflect"
+	"testing"
 
 	"github.com/google/go-github/github"
 )
