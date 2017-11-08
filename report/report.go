@@ -24,6 +24,8 @@ const teamName = "traefik"
 var loginMap = map[string]string{
 	"timoreimann": "ttr",
 	"emilevauge":  "emile",
+	"nmengin":     "nicomengin",
+	"mmatur":      "michael",
 }
 
 // MakeReport create a open PRs report model
