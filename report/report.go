@@ -26,6 +26,7 @@ var loginMap = map[string]string{
 	"emilevauge":  "emile",
 	"nmengin":     "nicomengin",
 	"mmatur":      "michael",
+	"Juliens":     "juliens",
 }
 
 // MakeReport create a open PRs report model
