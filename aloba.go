@@ -5,8 +5,10 @@ import (
 	"os"
 
 	"github.com/containous/aloba/cmd"
+	"github.com/containous/aloba/meta"
 	"github.com/containous/aloba/options"
 	"github.com/containous/flaeg"
+	"github.com/ogier/pflag"
 )
 
 func main() {
@@ -23,11 +25,32 @@ func main() {
 	flag.AddCommand(labelCmd)
 
 	// Run command
-	flag.Run()
+
+	// version
+	versionCmd := createVersionCommand()
+	flag.AddCommand(versionCmd)
+
+	// Run command
+	err := flag.Run()
+	if err != nil && err != pflag.ErrHelp {
+		log.Printf("Error: %v\n", err)
+	}
+}
+
+func createVersionCommand() *flaeg.Command {
+	return &flaeg.Command{
+		Name:                  "version",
+		Description:           "Display the version.",
+		Config:                &options.Empty{},
+		DefaultPointersConfig: &options.Empty{},
+		Run: func() error {
+			meta.DisplayVersion()
+			return nil
+		},
+	}
 }
 
 func createRootCommand() *flaeg.Command {
-
 	emptyConfig := &options.Empty{}
 
 	rootCmd := &flaeg.Command{
@@ -45,7 +68,6 @@ func createRootCommand() *flaeg.Command {
 }
 
 func createReportCommand() *flaeg.Command {
-
 	reportOptions := &options.Report{
 		Slack: &options.Slack{
 			IconEmoji: ":captainpr:",
@@ -90,7 +112,6 @@ func createReportCommand() *flaeg.Command {
 }
 
 func createLabelCommand() *flaeg.Command {
-
 	labelOptions := &options.Label{
 		RulesFilePath: "./rules.toml",
 		DryRun:        true,

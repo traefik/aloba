@@ -3,6 +3,7 @@ vendor/
 cover.out
 
 myrmica-aloba
+dist/
 aloba
 rules.toml
-unsecure/
+unsecured/
