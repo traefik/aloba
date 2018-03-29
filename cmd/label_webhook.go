@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/containous/aloba/internal/gh"
 	"github.com/containous/aloba/label"
@@ -29,6 +30,9 @@ func onPullRequest(ctx context.Context, client *github.Client, owner string, rep
 	return func(payload *github.WebHookPayload, event *github.PullRequestEvent) {
 		if event.GetAction() == "opened" {
 			go func(event *github.PullRequestEvent) {
+				// add sleep due to some GitHub latency
+				time.Sleep(1 * time.Second)
+
 				issue, _, err := client.Issues.Get(ctx, owner, repositoryName, event.GetNumber())
 				if err != nil {
 					log.Println(err)
