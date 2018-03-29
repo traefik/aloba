@@ -17,13 +17,44 @@ import (
 func runWebHook(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, opts *options.WebHook, dryRun bool) error {
 	handlers := ghw.NewEventHandlers().
 		OnPullRequest(onPullRequest(ctx, client, owner, repositoryName, rc, dryRun)).
-		OnPullRequestReview(onPullRequestReview(ctx, client, owner, repositoryName, dryRun))
+		OnPullRequestReview(onPullRequestReview(ctx, client, owner, repositoryName, dryRun)).
+		OnIssues(onIssue(ctx, client, owner, repositoryName, dryRun))
 
 	hook := ghw.NewWebHook(handlers,
 		ghw.WithPort(opts.Port),
 		ghw.WithSecret(opts.Secret),
 		ghw.WithEventTypes(eventtype.PullRequest, eventtype.PullRequestReview))
 	return hook.ListenAndServe()
+}
+
+func onIssue(ctx context.Context, client *github.Client, owner string, repositoryName string, dryRun bool) func(payload *github.WebHookPayload, event *github.IssuesEvent) {
+	return func(payload *github.WebHookPayload, event *github.IssuesEvent) {
+		if event.GetAction() == "opened" {
+			go func(event *github.IssuesEvent) {
+				// add sleep due to some GitHub latency
+				time.Sleep(1 * time.Second)
+
+				issue, _, err := client.Issues.Get(ctx, owner, repositoryName, event.Issue.GetNumber())
+				if err != nil {
+					log.Println(err)
+					return
+				}
+
+				// TODO review this part
+				if len(issue.Labels) > 0 {
+					if dryRun {
+						log.Printf("Add %q label to %d", label.StatusNeedsTriage, event.Issue.GetNumber())
+						return
+					}
+					_, _, err = client.Issues.AddLabelsToIssue(ctx, owner, repositoryName, issue.GetNumber(), []string{label.StatusNeedsTriage})
+					if err != nil {
+						log.Println(err)
+						return
+					}
+				}
+			}(event)
+		}
+	}
 }
 
 func onPullRequest(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) func(*github.WebHookPayload, *github.PullRequestEvent) {
