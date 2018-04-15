@@ -23,7 +23,7 @@ func runWebHook(ctx context.Context, client *github.Client, owner string, reposi
 	hook := ghw.NewWebHook(handlers,
 		ghw.WithPort(opts.Port),
 		ghw.WithSecret(opts.Secret),
-		ghw.WithEventTypes(eventtype.PullRequest, eventtype.PullRequestReview))
+		ghw.WithEventTypes(eventtype.PullRequest, eventtype.PullRequestReview, eventtype.Issues))
 	return hook.ListenAndServe()
 }
 
