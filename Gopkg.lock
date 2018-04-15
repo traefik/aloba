@@ -8,22 +8,25 @@
   version = "v0.3.0"
 
 [[projects]]
-  branch = "master"
   name = "github.com/containous/flaeg"
-  packages = ["."]
-  revision = "b5d2dc5878df07c2d74413348186982e7b865871"
+  packages = [
+    ".",
+    "parse"
+  ]
+  revision = "b4c2f060875361c070ed2bc300c5929b82f5fa2e"
+  version = "v1.1.2"
 
 [[projects]]
-  branch = "master"
   name = "github.com/golang/protobuf"
   packages = ["proto"]
-  revision = "1909bc2f63dc92bb931deace8b8312c4db72d12f"
+  revision = "925541529c1fa6821df4e44ce2723319eb2be768"
+  version = "v1.0.0"
 
 [[projects]]
-  branch = "master"
   name = "github.com/google/go-github"
   packages = ["github"]
-  revision = "6afafa88c26eb51b33a8307c944bd2f0ef227af7"
+  revision = "e48060a28fac52d0f1cb758bc8b87c07bac4a87d"
+  version = "v15.0.0"
 
 [[projects]]
   branch = "master"
@@ -32,44 +35,67 @@
   revision = "53e6ce116135b80d037921a7fdd5138cf32d7a8a"
 
 [[projects]]
+  name = "github.com/gorilla/websocket"
+  packages = ["."]
+  revision = "ea4d1f681babbce9545c9c5f3d5194a789c89f5b"
+  version = "v1.2.0"
+
+[[projects]]
   name = "github.com/ldez/ghwebhook"
-  packages = [".","eventtype"]
-  revision = "a38b828c450271c6c06b6094f8ab17c47bfbf8fe"
-  version = "v1.1.1"
+  packages = [
+    ".",
+    "eventtype"
+  ]
+  revision = "4ca38f978070bbd398f76cbc08adf3864f66076a"
+  version = "v1.1.2"
 
 [[projects]]
   branch = "master"
   name = "github.com/nlopes/slack"
   packages = ["."]
-  revision = "5cde21b8b96a43fc3435a1f514123d14fd7eabdc"
+  revision = "3472fa2dd0347a0d966feaf49d3e197d50e9576e"
 
 [[projects]]
+  branch = "master"
   name = "github.com/ogier/pflag"
   packages = ["."]
-  revision = "32a05c62658bd1d7c7e75cbc8195de5d585fde0f"
-  version = "v0.0.1"
+  revision = "45c278ab3607870051a2ea9040bb85fcb8557481"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
-  packages = ["context","context/ctxhttp","websocket"]
-  revision = "1c05540f6879653db88113bc4a2b70aec4bd491f"
+  packages = [
+    "context",
+    "context/ctxhttp"
+  ]
+  revision = "61147c48b25b599e5b561d2e9c4f3e1ef489ca41"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/oauth2"
-  packages = [".","internal"]
-  revision = "9a379c6b3e95a790ffc43293c2a78dee0d7b6e20"
+  packages = [
+    ".",
+    "internal"
+  ]
+  revision = "921ae394b9430ed4fb549668d7b087601bd60a81"
 
 [[projects]]
   name = "google.golang.org/appengine"
-  packages = [".","internal","internal/app_identity","internal/base","internal/datastore","internal/log","internal/modules","internal/remote_api","internal/urlfetch","urlfetch"]
+  packages = [
+    "internal",
+    "internal/base",
+    "internal/datastore",
+    "internal/log",
+    "internal/remote_api",
+    "internal/urlfetch",
+    "urlfetch"
+  ]
   revision = "150dc57a1b433e64154302bdc40b6bb8aefa313a"
   version = "v1.0.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ba7c6b6043cf42c3b3df03b4f3466bf60fcb92c11cfd71beb7f0f7101eae5114"
+  inputs-digest = "446ecd8376c64003c3e732593f9b4a253a6fa35f9865d968f749bf1bc12db4d0"
   solver-name = "gps-cdcl"
   solver-version = 1
