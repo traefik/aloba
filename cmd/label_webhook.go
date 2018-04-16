@@ -40,12 +40,12 @@ func onIssue(ctx context.Context, client *github.Client, owner string, repositor
 					return
 				}
 
-				// TODO review this part
-				if len(issue.Labels) > 0 {
+				if len(issue.Labels) == 0 {
 					if dryRun {
 						log.Printf("Add %q label to %d", label.StatusNeedsTriage, event.Issue.GetNumber())
 						return
 					}
+
 					_, _, err = client.Issues.AddLabelsToIssue(ctx, owner, repositoryName, issue.GetNumber(), []string{label.StatusNeedsTriage})
 					if err != nil {
 						log.Println(err)
