@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -33,7 +34,7 @@ func main() {
 	// Run command
 	err := flag.Run()
 	if err != nil && err != pflag.ErrHelp {
-		log.Printf("Error: %v\n", err)
+		log.Fatalf("Error: %v\n", err)
 	}
 }
 
@@ -98,14 +99,10 @@ func createReportCommand() *flaeg.Command {
 
 		err := validateReportOptions(reportOptions)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 
-		err = cmd.Report(reportOptions)
-		if err != nil {
-			log.Println(err)
-		}
-		return nil
+		return cmd.Report(reportOptions)
 	}
 
 	return reportCmd
@@ -146,14 +143,10 @@ func createLabelCommand() *flaeg.Command {
 
 		err := validateLabelOptions(labelOptions)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 
-		err = cmd.Label(labelOptions)
-		if err != nil {
-			log.Println(err)
-		}
-		return nil
+		return cmd.Label(labelOptions)
 	}
 
 	return labelCmd
@@ -161,7 +154,7 @@ func createLabelCommand() *flaeg.Command {
 
 func required(field string, fieldName string) error {
 	if len(field) == 0 {
-		log.Fatalf("%s is mandatory.", fieldName)
+		return fmt.Errorf("%s is mandatory", fieldName)
 	}
 	return nil
 }
