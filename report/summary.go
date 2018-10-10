@@ -27,7 +27,7 @@ func makePRSummaries(ctx context.Context, client *github.Client,
 	owner string, repositoryName string,
 	members []*github.User,
 	transform func(ctx context.Context, client *github.Client, owner string, repositoryName string, members []*github.User, issue github.Issue) prSummary,
-	searchFilter ...search.Parameter) ([]prSummary, error) {
+	searchFilter ...search.Parameter) []prSummary {
 
 	issues, err := search.FindOpenPR(ctx, client, owner, repositoryName, searchFilter...)
 	if err != nil {
@@ -41,11 +41,10 @@ func makePRSummaries(ctx context.Context, client *github.Client,
 		summaries = append(summaries, summary)
 	}
 
-	return summaries, nil
+	return summaries
 }
 
 func newPRSummary(issue github.Issue, approved []string, requestChanges []string) prSummary {
-
 	var areas []string
 	var size string
 	for _, lbl := range issue.Labels {

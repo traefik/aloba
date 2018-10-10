@@ -42,7 +42,7 @@ func MakeReport(ctx context.Context, client *github.Client, owner string, reposi
 	rp := &Model{}
 
 	// reviews + status-2 + no contrib/
-	rp.withReviews, err = makePRSummaries(ctx, client, owner, repositoryName, members,
+	rp.withReviews = makePRSummaries(ctx, client, owner, repositoryName, members,
 		makeWithReview,
 		search.WithReview,
 		search.WithLabels(label.StatusNeedsReview),
@@ -54,12 +54,9 @@ func MakeReport(ctx context.Context, client *github.Client, owner string, reposi
 			label.ContributorNeedMoreInformation,
 			label.StatusNeedsDesignReview,
 			label.StatusNeedsMerge))
-	if err != nil {
-		return nil, err
-	}
 
 	// no review + status-2 + no contrib/
-	rp.noReviews, err = makePRSummaries(ctx, client, owner, repositoryName, nil,
+	rp.noReviews = makePRSummaries(ctx, client, owner, repositoryName, nil,
 		makeWithoutReview,
 		search.WithReviewNone,
 		search.WithLabels(label.StatusNeedsReview),
@@ -71,30 +68,21 @@ func MakeReport(ctx context.Context, client *github.Client, owner string, reposi
 			label.ContributorNeedMoreInformation,
 			label.StatusNeedsDesignReview,
 			label.StatusNeedsMerge))
-	if err != nil {
-		return nil, err
-	}
 
 	// contrib/
-	rp.contrib, err = makePRSummaries(ctx, client, owner, repositoryName, members,
+	rp.contrib = makePRSummaries(ctx, client, owner, repositoryName, members,
 		makeWithReview,
 		search.WithReview,
 		search.WithLabels(
 			label.StatusNeedsReview,
 			label.ContributorWaitingForCorrections),
 		search.WithExcludedLabels(label.WIP))
-	if err != nil {
-		return nil, err
-	}
 
 	// design review
-	rp.designReview, err = makePRSummaries(ctx, client, owner, repositoryName, nil,
+	rp.designReview = makePRSummaries(ctx, client, owner, repositoryName, nil,
 		makeWithoutReview,
 		search.WithLabels(label.StatusNeedsDesignReview),
 		search.WithExcludedLabels(label.WIP))
-	if err != nil {
-		return nil, err
-	}
 
 	return rp, nil
 }
