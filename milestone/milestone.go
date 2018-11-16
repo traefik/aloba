@@ -33,7 +33,7 @@ func (m byWeight) Swap(i, j int) {
 	m[i], m[j] = m[j], m[i]
 }
 
-var exp = regexp.MustCompile(`(\d+)\.(\d+)(?:\.(\d+))?`)
+var expMilestone = regexp.MustCompile(`(\d+)\.(\d+)(?:\.(\d+))?`)
 
 // Detect the possible milestone of a PR
 func Detect(ctx context.Context, client *github.Client, owner, repoName string, pr *github.PullRequest) (*MetaMilestone, error) {
@@ -90,7 +90,7 @@ func find(metas []*MetaMilestone, baseRef string) *MetaMilestone {
 }
 
 func weightCalculator(ml *github.Milestone) (int64, error) {
-	parts := exp.FindStringSubmatch(ml.GetTitle())
+	parts := expMilestone.FindStringSubmatch(ml.GetTitle())
 
 	if len(parts) != 4 {
 		return 0, fmt.Errorf("invalid milestone title %s", ml.GetTitle())

@@ -91,11 +91,12 @@ func getSizeLabel(changes *Changes, limits Limits) string {
 		diff = -diff
 	}
 
-	if sum < limits.Small.SumLimit && diff < limits.Small.DiffLimit && changes.ChangedFiles < limits.Small.FilesLimit {
+	switch {
+	case sum < limits.Small.SumLimit && diff < limits.Small.DiffLimit && changes.ChangedFiles < limits.Small.FilesLimit:
 		return Small
-	} else if sum < limits.Medium.SumLimit && diff < limits.Medium.DiffLimit && changes.ChangedFiles < limits.Medium.FilesLimit {
+	case sum < limits.Medium.SumLimit && diff < limits.Medium.DiffLimit && changes.ChangedFiles < limits.Medium.FilesLimit:
 		return Medium
-	} else {
+	default:
 		return Large
 	}
 }
