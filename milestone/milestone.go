@@ -3,11 +3,10 @@ package milestone
 import (
 	"context"
 	"fmt"
+	"log"
 	"regexp"
 	"sort"
 	"strconv"
-
-	"log"
 
 	"github.com/google/go-github/github"
 )
