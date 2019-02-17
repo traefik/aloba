@@ -22,7 +22,59 @@ Flags:
 -h, --help Print Help (this message) and exit 
 ```
 
-## Command `label`
+## Manage GitHub labels.
+
+- on new issue: adds the label `status/0-needs-triage`
+- on new pull request:
+    - adds the label `status/0-needs-triage`
+    - adds labels based on rules.
+    - adds a milestone (if a milestone matches the based branch of the PR).
+    - adds a label related to the size of the pull request.
+
+### Command `action`
+
+```shell
+GitHub Action
+
+Usage: action [--flag=flag_argument] [-f[flag_argument]] ...     set flag_argument to flag(s)
+   or: action [--flag[=true|false| ]] [-f[true|false| ]] ...     set true/false to boolean flag(s)
+
+Flags:
+    --debug   Debug mode.                        (default "false")
+    --dry-run Dry run mode.                      (default "true")
+-h, --help    Print Help (this message) and exit 
+```
+
+- `GITHUB_TOKEN`: Github Token.
+- `.github/aloba-rules.toml`: the rules to apply.
+
+#### Examples:
+
+```hcl
+workflow "Aloba: Issues" {
+  on = "issues"
+  resolves = ["docker://containous/aloba"]
+}
+
+action "docker://containous/aloba" {
+  uses = "docker://containous/aloba"
+  secrets = ["GITHUB_TOKEN"]
+  args = "action --dry-run=false"
+}
+
+workflow "Aloba: Pull Requests" {
+  resolves = ["docker://containous/aloba-1"]
+  on = "pull_request"
+}
+
+action "docker://containous/aloba-1" {
+  uses = "docker://containous/aloba"
+  secrets = ["GITHUB_TOKEN"]
+  args = "action --dry-run=false"
+}
+```
+
+### Command `label`
 
 ```shell
 Add labels to Pull Request
@@ -47,54 +99,36 @@ Flags:
 - `GITHUB_TOKEN`: Github Token.
 - `WEBHOOK_SECRET`: Github WebHook Secret.
 
-
-### Examples:
+#### Examples:
 
 ```shell
 aloba label -o containous -r traefik --web-hook --github.token="xxxxxxxxxx"
 ```
 
-## Command `action`
+### Rules
 
-```shell
-GitHub Action
+```toml
+[[Rules]]
+  Label = "area/vegetable"
+  Regex = "(?i).*(tomate|carotte).*"
 
-Usage: action [--flag=flag_argument] [-f[flag_argument]] ...     set flag_argument to flag(s)
-   or: action [--flag[=true|false| ]] [-f[true|false| ]] ...     set true/false to boolean flag(s)
+[[Rules]]
+  Label = "area/cheese"
+  Regex = "cheese/.*"
 
-Flags:
-    --debug   Debug mode.                        (default "false")
-    --dry-run Dry run mode.                      (default "true")
--h, --help    Print Help (this message) and exit 
-```
+[[Rules]]
+  Label = "area/infrastructure"
+  Regex = "(?i)(\\.github|script/).*"
 
-- `GITHUB_TOKEN`: Github Token.
-- `.github/aloba-rules.toml`: the rules to apply.
-
-### Examples:
-
-```hcl
-workflow "Aloba: Issues" {
-  on = "issues"
-  resolves = ["docker://containous/aloba"]
-}
-
-action "docker://containous/aloba" {
-  uses = "docker://containous/aloba"
-  secrets = ["GITHUB_TOKEN"]
-  args = "action --dry-run=false"
-}
-
-workflow "Aloba: Pull Requests" {
-  resolves = ["docker://containous/aloba-1"]
-  on = "pull_request"
-}
-
-action "docker://containous/aloba-1" {
-  uses = "docker://containous/aloba"
-  secrets = ["GITHUB_TOKEN"]
-  args = "action --dry-run=false"
-}
+[Limits]
+  [Limits.Small]
+    SumLimit = 150
+    DiffLimit = 70
+    FilesLimit = 20
+  [Limits.Medium]
+    SumLimit = 400
+    DiffLimit = 200
+    FilesLimit = 50
 ```
 
 ## Command `report`
@@ -128,5 +162,7 @@ Flags:
 ```shell
 aloba report -o containous -r traefik --github.token="xxxxxxxxxx" --slack.token="xxxxxxxxxx" --slack.channel=C0CDT22PJ
 ```
+
+
 
 ![Myrmica Aloba](http://www.antwiki.org/wiki/images/8/8c/Myrmica_aloba_H_casent0907652.jpg)
