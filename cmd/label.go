@@ -3,7 +3,6 @@ package cmd
 import (
 	"context"
 	"log"
-	"time"
 
 	"github.com/BurntSushi/toml"
 	"github.com/containous/aloba/internal/gh"

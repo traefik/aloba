@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/containous/aloba.svg?branch=master)](https://travis-ci.org/containous/aloba)
 [![Docker Build Status](https://img.shields.io/docker/build/containous/aloba.svg)](https://hub.docker.com/r/containous/aloba/builds/)
 
+## Help
 
 ```shell
 Myrmica Aloba: Manage GitHub labels.
@@ -19,7 +20,8 @@ Flags:
 -h, --help Print Help (this message) and exit 
 ```
 
-Sub-command `label`:
+## Command `label`
+
 ```shell
 Add labels to Pull Request
 
@@ -40,7 +42,19 @@ Flags:
 -h, --help             Print Help (this message) and exit
 ```
 
-Sub-command `report`:
+- `GITHUB_TOKEN`: Github Token.
+- `WEBHOOK_SECRET`: Github WebHook Secret.
+
+
+### Examples:
+
+Sub-command `label`:
+```shell
+aloba label -o containous -r traefik --web-hook --github.token="xxxxxxxxxx"
+```
+
+## Command `report`
+
 ```shell
 Create a report and publish on Slack.
 
@@ -62,7 +76,10 @@ Flags:
 -h, --help             Print Help (this message) and exit
 ```
 
-## Examples:
+- `GITHUB_TOKEN`: Github Token.
+- `SLACK_TOKEN`: Slack Token.
+
+### Examples:
 
 Sub-command `label`:
 ```shell
