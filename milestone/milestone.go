@@ -36,10 +36,8 @@ var expMilestone = regexp.MustCompile(`(\d+)\.(\d+)(?:\.(\d+))?`)
 
 // Detect the possible milestone of a PR
 func Detect(ctx context.Context, client *github.Client, owner, repoName string, pr *github.PullRequest) (*MetaMilestone, error) {
-
-	opt := &github.MilestoneListOptions{
-		State: "all",
-	}
+	opt := &github.MilestoneListOptions{}
+	opt.State = "all"
 	opt.PerPage = 10
 
 	stones, _, err := client.Issues.ListMilestones(ctx, owner, repoName, opt)

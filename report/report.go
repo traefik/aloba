@@ -144,7 +144,6 @@ func makeLine(summary prSummary, details bool) string {
 }
 
 func makeWithReview(ctx context.Context, client *github.Client, owner string, repositoryName string, members []*github.User, issue github.Issue) prSummary {
-
 	approvedReviews, changesRequestedReviews, err := gh.GetReviewStatus(ctx, client, owner, repositoryName, members, issue.GetNumber())
 	if err != nil {
 		log.Fatal(err)

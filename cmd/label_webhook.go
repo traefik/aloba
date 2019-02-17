@@ -28,7 +28,7 @@ func runWebHook(ctx context.Context, client *github.Client, owner string, reposi
 }
 
 func onIssue(ctx context.Context, client *github.Client, owner string, repositoryName string, dryRun bool) func(payload *github.WebHookPayload, event *github.IssuesEvent) {
-	return func(payload *github.WebHookPayload, event *github.IssuesEvent) {
+	return func(_ *github.WebHookPayload, event *github.IssuesEvent) {
 		if event.GetAction() == "opened" {
 			go func(event *github.IssuesEvent) {
 				// add sleep due to some GitHub latency
@@ -58,7 +58,7 @@ func onIssue(ctx context.Context, client *github.Client, owner string, repositor
 }
 
 func onPullRequest(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) func(*github.WebHookPayload, *github.PullRequestEvent) {
-	return func(payload *github.WebHookPayload, event *github.PullRequestEvent) {
+	return func(_ *github.WebHookPayload, event *github.PullRequestEvent) {
 		if event.GetAction() == "opened" {
 			go func(event *github.PullRequestEvent) {
 				// add sleep due to some GitHub latency
@@ -87,7 +87,7 @@ func onPullRequest(ctx context.Context, client *github.Client, owner string, rep
 }
 
 func onPullRequestReview(ctx context.Context, client *github.Client, owner string, repositoryName string, dryRun bool) func(*github.WebHookPayload, *github.PullRequestReviewEvent) {
-	return func(payload *github.WebHookPayload, event *github.PullRequestReviewEvent) {
+	return func(_ *github.WebHookPayload, event *github.PullRequestReviewEvent) {
 		if event.GetAction() == "submitted" {
 			if strings.ToUpper(event.Review.GetState()) == gh.ChangesRequested {
 				go func(event *github.PullRequestReviewEvent) {

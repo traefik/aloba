@@ -16,7 +16,6 @@ type Rule struct {
 
 // DetectAreas for a Pull Request
 func DetectAreas(ctx context.Context, client *github.Client, owner string, repositoryName string, prNumber int, rules []Rule) ([]string, error) {
-
 	areasMap := make(map[string]struct{})
 
 	opt := &github.ListOptions{
@@ -44,11 +43,9 @@ func DetectAreas(ctx context.Context, client *github.Client, owner string, repos
 	}
 
 	var areas []string
-
 	for area := range areasMap {
 		areas = append(areas, area)
 	}
-
 	return areas, nil
 }
 

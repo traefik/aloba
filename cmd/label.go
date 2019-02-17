@@ -3,10 +3,10 @@ package cmd
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/BurntSushi/toml"
 	"github.com/containous/aloba/internal/gh"
-	"github.com/containous/aloba/internal/search"
 	"github.com/containous/aloba/label"
 	"github.com/containous/aloba/milestone"
 	"github.com/containous/aloba/options"
@@ -21,7 +21,6 @@ type RulesConfiguration struct {
 
 // Label add labels to Pull Request
 func Label(options *options.Label) error {
-
 	if options.Debug {
 		log.Println(options)
 	}
@@ -42,38 +41,8 @@ func Label(options *options.Label) error {
 	if options.WebHook == nil {
 		return runStandalone(ctx, client, options.GitHub.Owner, options.GitHub.RepositoryName, rc, options.DryRun)
 	}
+
 	return runWebHook(ctx, client, options.GitHub.Owner, options.GitHub.RepositoryName, rc, options.WebHook, options.DryRun)
-}
-
-func runStandalone(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) error {
-	issues, err := search.FindOpenPR(ctx, client, owner, repositoryName,
-		search.WithExcludedLabels(
-			label.SizeLabelPrefix+label.Small,
-			label.SizeLabelPrefix+label.Medium,
-			label.SizeLabelPrefix+label.Large,
-			label.WIP))
-	if err != nil {
-		return err
-	}
-
-	for _, issue := range issues {
-		err := addLabelsToPR(ctx, client, owner, repositoryName, issue, rc, dryRun)
-		if err != nil {
-			return err
-		}
-		if issue.Milestone == nil {
-			pr, _, err := client.PullRequests.Get(ctx, owner, repositoryName, issue.GetNumber())
-			if err != nil {
-				return err
-			}
-			err = addMilestoneToPR(ctx, client, owner, repositoryName, pr)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
 }
 
 func addMilestoneToPR(ctx context.Context, client *github.Client, owner, repoName string, pr *github.PullRequest) error {

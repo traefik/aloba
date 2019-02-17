@@ -8,7 +8,6 @@ import (
 )
 
 func Test_find(t *testing.T) {
-
 	testCases := []struct {
 		name           string
 		metas          []*MetaMilestone

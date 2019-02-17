@@ -27,7 +27,6 @@ func FindOpenPR(ctx context.Context, client *github.Client, owner string, reposi
 	}
 
 	query := fmt.Sprintf("repo:%s/%s type:pr state:open %s", owner, repositoryName, filter)
-	//log.Println(query)
 
 	options := &github.SearchOptions{
 		Sort:        "created",
