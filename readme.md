@@ -1,33 +1,23 @@
 # Myrmica Aloba: Manage GitHub labels.
 
+[![Release](https://img.shields.io/github/release/containous/aloba.svg?style=flat)](https://github.com/containous/aloba/releases)
 [![Build Status](https://travis-ci.org/containous/aloba.svg?branch=master)](https://travis-ci.org/containous/aloba)
 [![Docker Build Status](https://img.shields.io/docker/build/containous/aloba.svg)](https://hub.docker.com/r/containous/aloba/builds/)
 
-## Help
-
-```shell
-Myrmica Aloba: Manage GitHub labels.
-
-Usage: aloba [--flag=flag_argument] [-f[flag_argument]] ...     set flag_argument to flag(s)
-   or: aloba [--flag[=true|false| ]] [-f[true|false| ]] ...     set true/false to boolean flag(s)
+## Overview
 
 Available Commands:
-        action                                             GitHub Action
-        label                                              Add labels to Pull Request
-        report                                             Create a report and publish on Slack.
-        version                                            Display the version.
-Use "aloba [command] --help" for more information about a command.
-
-Flags:
--h, --help Print Help (this message) and exit 
-```
+- `action`: GitHub Action (Add labels and milestone on pull requests and issues.)
+- `label`: Add labels and milestone on pull requests and issues.
+- `report`: Create a report and publish on Slack.
+- `version`: Display the version.
 
 ## Manage GitHub labels.
 
 - on new issue: adds the label `status/0-needs-triage`
 - on new pull request:
     - adds the label `status/0-needs-triage`
-    - adds labels based on rules.
+    - adds labels based on [rules](#rules).
     - adds a milestone (if a milestone matches the based branch of the PR).
     - adds a label related to the size of the pull request.
 
@@ -77,7 +67,7 @@ action "docker://containous/aloba-1" {
 ### Command `label`
 
 ```shell
-Add labels to Pull Request
+Add labels and milestone on pull requests and issues.
 
 Usage: label [--flag=flag_argument] [-f[flag_argument]] ...     set flag_argument to flag(s)
    or: label [--flag[=true|false| ]] [-f[true|false| ]] ...     set true/false to boolean flag(s)
@@ -162,7 +152,5 @@ Flags:
 ```shell
 aloba report -o containous -r traefik --github.token="xxxxxxxxxx" --slack.token="xxxxxxxxxx" --slack.channel=C0CDT22PJ
 ```
-
-
 
 ![Myrmica Aloba](http://www.antwiki.org/wiki/images/8/8c/Myrmica_aloba_H_casent0907652.jpg)

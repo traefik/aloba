@@ -128,7 +128,7 @@ func createLabelCommand() *flaeg.Command {
 
 	labelCmd := &flaeg.Command{
 		Name:                  "label",
-		Description:           "Add labels to Pull Request",
+		Description:           "Add labels and milestone on pull requests and issues.",
 		Config:                labelOptions,
 		DefaultPointersConfig: defaultPointerOptions,
 	}
