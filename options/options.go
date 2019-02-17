@@ -37,6 +37,12 @@ type Label struct {
 	GitHub        *GitHub  `description:"GitHub options."`
 }
 
+// GitHubAction options
+type GitHubAction struct {
+	Debug  bool `description:"Debug mode."`
+	DryRun bool `long:"dry-run" description:"Dry run mode."`
+}
+
 // WebHook options
 type WebHook struct {
 	Port   int    `description:"WebHook port."`

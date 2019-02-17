@@ -12,8 +12,10 @@ Usage: aloba [--flag=flag_argument] [-f[flag_argument]] ...     set flag_argumen
    or: aloba [--flag[=true|false| ]] [-f[true|false| ]] ...     set true/false to boolean flag(s)
 
 Available Commands:
-	label                                              Add labels to Pull Request
-	report                                             Create a report and publish on Slack.
+        action                                             GitHub Action
+        label                                              Add labels to Pull Request
+        report                                             Create a report and publish on Slack.
+        version                                            Display the version.
 Use "aloba [command] --help" for more information about a command.
 
 Flags:
@@ -48,9 +50,31 @@ Flags:
 
 ### Examples:
 
-Sub-command `label`:
 ```shell
 aloba label -o containous -r traefik --web-hook --github.token="xxxxxxxxxx"
+```
+
+## Command `action`
+
+```shell
+GitHub Action
+
+Usage: action [--flag=flag_argument] [-f[flag_argument]] ...     set flag_argument to flag(s)
+   or: action [--flag[=true|false| ]] [-f[true|false| ]] ...     set true/false to boolean flag(s)
+
+Flags:
+    --debug   Debug mode.                        (default "false")
+    --dry-run Dry run mode.                      (default "true")
+-h, --help    Print Help (this message) and exit 
+```
+
+- `GITHUB_TOKEN`: Github Token.
+- `.github/aloba-rules.toml`: the rules to apply.
+
+### Examples:
+
+```shell
+aloba action
 ```
 
 ## Command `report`
@@ -81,12 +105,6 @@ Flags:
 
 ### Examples:
 
-Sub-command `label`:
-```shell
-aloba label -o containous -r traefik --web-hook --github.token="xxxxxxxxxx"
-```
-
-Sub-command `report`:
 ```shell
 aloba report -o containous -r traefik --github.token="xxxxxxxxxx" --slack.token="xxxxxxxxxx" --slack.channel=C0CDT22PJ
 ```

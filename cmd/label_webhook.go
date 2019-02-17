@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/containous/aloba/internal/gh"
 	"github.com/containous/aloba/label"
@@ -29,28 +28,11 @@ func runWebHook(ctx context.Context, client *github.Client, owner string, reposi
 
 func onIssue(ctx context.Context, client *github.Client, owner string, repositoryName string, dryRun bool) func(payload *github.WebHookPayload, event *github.IssuesEvent) {
 	return func(_ *github.WebHookPayload, event *github.IssuesEvent) {
-		if event.GetAction() == "opened" {
+		if event.GetAction() == stateOpened {
 			go func(event *github.IssuesEvent) {
-				// add sleep due to some GitHub latency
-				time.Sleep(1 * time.Second)
-
-				issue, _, err := client.Issues.Get(ctx, owner, repositoryName, event.Issue.GetNumber())
+				err := onIssueOpened(ctx, client, event, owner, repositoryName, dryRun)
 				if err != nil {
 					log.Println(err)
-					return
-				}
-
-				if len(issue.Labels) == 0 {
-					if dryRun {
-						log.Printf("Add %q label to %d", label.StatusNeedsTriage, event.Issue.GetNumber())
-						return
-					}
-
-					_, _, err = client.Issues.AddLabelsToIssue(ctx, owner, repositoryName, issue.GetNumber(), []string{label.StatusNeedsTriage})
-					if err != nil {
-						log.Println(err)
-						return
-					}
 				}
 			}(event)
 		}
@@ -59,27 +41,11 @@ func onIssue(ctx context.Context, client *github.Client, owner string, repositor
 
 func onPullRequest(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) func(*github.WebHookPayload, *github.PullRequestEvent) {
 	return func(_ *github.WebHookPayload, event *github.PullRequestEvent) {
-		if event.GetAction() == "opened" {
+		if event.GetAction() == stateOpened {
 			go func(event *github.PullRequestEvent) {
-				// add sleep due to some GitHub latency
-				time.Sleep(1 * time.Second)
-
-				issue, _, err := client.Issues.Get(ctx, owner, repositoryName, event.GetNumber())
+				err := onPullRequestOpened(ctx, client, event, owner, repositoryName, rc, dryRun)
 				if err != nil {
 					log.Println(err)
-					return
-				}
-
-				err = addLabelsToPR(ctx, client, owner, repositoryName, *issue, rc, dryRun)
-				if err != nil {
-					log.Println(err)
-				}
-
-				if event.PullRequest.Milestone == nil {
-					err = addMilestoneToPR(ctx, client, owner, repositoryName, event.PullRequest)
-					if err != nil {
-						log.Println(err)
-					}
 				}
 			}(event)
 		}

@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/BurntSushi/toml"
 	"github.com/containous/aloba/internal/gh"
@@ -11,6 +12,8 @@ import (
 	"github.com/containous/aloba/options"
 	"github.com/google/go-github/github"
 )
+
+const stateOpened = "opened"
 
 // RulesConfiguration Stale issues rules configuration
 type RulesConfiguration struct {
@@ -63,7 +66,6 @@ func addMilestoneToPR(ctx context.Context, client *github.Client, owner, repoNam
 }
 
 func addLabelsToPR(ctx context.Context, client *github.Client, owner string, repositoryName string, issue github.Issue, rc *RulesConfiguration, dryRun bool) error {
-
 	var labels []string
 
 	// AREA
@@ -127,4 +129,52 @@ func getSizeLabel(ctx context.Context, client *github.Client, owner string, repo
 		return size, nil
 	}
 	return "", nil
+}
+
+func onIssueOpened(ctx context.Context, client *github.Client, event *github.IssuesEvent, owner, repositoryName string, dryRun bool) error {
+	// add sleep due to some GitHub latency
+	time.Sleep(1 * time.Second)
+
+	issue, _, err := client.Issues.Get(ctx, owner, repositoryName, event.Issue.GetNumber())
+	if err != nil {
+		return err
+	}
+
+	if len(issue.Labels) == 0 {
+		if dryRun {
+			log.Printf("Add %q label to %d", label.StatusNeedsTriage, event.Issue.GetNumber())
+			return nil
+		}
+
+		_, _, err = client.Issues.AddLabelsToIssue(ctx, owner, repositoryName, issue.GetNumber(), []string{label.StatusNeedsTriage})
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func onPullRequestOpened(ctx context.Context, client *github.Client, event *github.PullRequestEvent, owner, repositoryName string, rc *RulesConfiguration, dryRun bool) error {
+	// add sleep due to some GitHub latency
+	time.Sleep(1 * time.Second)
+
+	issue, _, err := client.Issues.Get(ctx, owner, repositoryName, event.GetNumber())
+	if err != nil {
+		return err
+	}
+
+	err = addLabelsToPR(ctx, client, owner, repositoryName, *issue, rc, dryRun)
+	if err != nil {
+		return err
+	}
+
+	if event.PullRequest.Milestone == nil {
+		err = addMilestoneToPR(ctx, client, owner, repositoryName, event.PullRequest)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

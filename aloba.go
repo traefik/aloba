@@ -25,11 +25,20 @@ func main() {
 	labelCmd := createLabelCommand()
 	flag.AddCommand(labelCmd)
 
+	// GitHubAction
+	ghaCmd := createGitHubActionCommand()
+	flag.AddCommand(ghaCmd)
+
 	// Run command
 
 	// version
 	versionCmd := createVersionCommand()
 	flag.AddCommand(versionCmd)
+
+	// Print help when the command is running without any parameters.
+	rootCmd.Run = func() error {
+		return flaeg.LoadWithCommand(rootCmd, []string{"-h"}, nil, []*flaeg.Command{rootCmd, reportCmd, labelCmd, ghaCmd, versionCmd})
+	}
 
 	// Run command
 	err := flag.Run()
@@ -59,10 +68,6 @@ func createRootCommand() *flaeg.Command {
 		Description:           "Myrmica Aloba: Manage GitHub labels.",
 		Config:                emptyConfig,
 		DefaultPointersConfig: &options.Empty{},
-		Run: func() error {
-			// No op
-			return nil
-		},
 	}
 
 	return rootCmd
@@ -147,6 +152,35 @@ func createLabelCommand() *flaeg.Command {
 		}
 
 		return cmd.Label(labelOptions)
+	}
+
+	return labelCmd
+}
+
+func createGitHubActionCommand() *flaeg.Command {
+	labelOptions := &options.GitHubAction{
+		DryRun: true,
+	}
+
+	labelCmd := &flaeg.Command{
+		Name:                  "action",
+		Description:           "GitHub Action",
+		Config:                labelOptions,
+		DefaultPointersConfig: &options.GitHubAction{},
+	}
+
+	labelCmd.Run = func() error {
+		if labelOptions.DryRun {
+			log.Print("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
+		}
+
+		ghToken := os.Getenv("GITHUB_TOKEN")
+		err := required(ghToken, "GITHUB_TOKEN")
+		if err != nil {
+			return err
+		}
+
+		return cmd.RunGitHubAction(labelOptions, ghToken)
 	}
 
 	return labelCmd
