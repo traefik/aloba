@@ -26,7 +26,10 @@ func postSlackMessage(options *options.Slack, message string) error {
 		Username:  options.BotName,
 	}
 
-	_, _, err := api.PostMessage(options.ChannelID, message, ppm)
+	_, _, err := api.PostMessage(options.ChannelID,
+		slack.MsgOptionPostMessageParameters(ppm),
+		slack.MsgOptionText(message, false),
+	)
 	return err
 }
 

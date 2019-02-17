@@ -76,10 +76,10 @@ func GetTeamMembers(ctx context.Context, client *github.Client, owner string, te
 		return nil, err
 	}
 
-	orgTeamMemberOpts := &github.OrganizationListTeamMembersOptions{}
+	orgTeamMemberOpts := &github.TeamListTeamMembersOptions{}
 	orgTeamMemberOpts.PerPage = 100
 
-	members, _, err := client.Organizations.ListTeamMembers(ctx, team.GetID(), orgTeamMemberOpts)
+	members, _, err := client.Teams.ListTeamMembers(ctx, team.GetID(), orgTeamMemberOpts)
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +88,7 @@ func GetTeamMembers(ctx context.Context, client *github.Client, owner string, te
 }
 
 func getTeamByName(ctx context.Context, client *github.Client, owner string, teamName string) (*github.Team, error) {
-	teams, _, err := client.Organizations.ListTeams(ctx, owner, nil)
+	teams, _, err := client.Teams.ListTeams(ctx, owner, nil)
 	if err != nil {
 		return nil, err
 	}
