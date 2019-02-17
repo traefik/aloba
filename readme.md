@@ -73,8 +73,28 @@ Flags:
 
 ### Examples:
 
-```shell
-aloba action
+```hcl
+workflow "Aloba: Issues" {
+  on = "issues"
+  resolves = ["docker://containous/aloba"]
+}
+
+action "docker://containous/aloba" {
+  uses = "docker://containous/aloba"
+  secrets = ["GITHUB_TOKEN"]
+  args = "action --dry-run=false"
+}
+
+workflow "Aloba: Pull Requests" {
+  resolves = ["docker://containous/aloba-1"]
+  on = "pull_request"
+}
+
+action "docker://containous/aloba-1" {
+  uses = "docker://containous/aloba"
+  secrets = ["GITHUB_TOKEN"]
+  args = "action --dry-run=false"
+}
 ```
 
 ## Command `report`
