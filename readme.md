@@ -1,4 +1,4 @@
-# Myrmica Aloba: Manage GitHub labels.
+# Myrmica Aloba: Add labels and milestone on pull requests and issues.
 
 [![Release](https://img.shields.io/github/release/containous/aloba.svg?style=flat)](https://github.com/containous/aloba/releases)
 [![Build Status](https://travis-ci.org/containous/aloba.svg?branch=master)](https://travis-ci.org/containous/aloba)
