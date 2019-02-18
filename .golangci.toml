@@ -40,7 +40,7 @@
   exclude = []
   [[issues.exclude-rules]]
     path = "meta/version.go"
-    text = "`(Version|BuildDate)` is a global variable"
+    text = "`(version|commit|date)` is a global variable"
   [[issues.exclude-rules]]
     path = "report/report.go"
     text = "`loginMap` is a global variable"
