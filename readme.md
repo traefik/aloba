@@ -43,21 +43,21 @@ Flags:
 ```hcl
 workflow "Aloba: Issues" {
   on = "issues"
-  resolves = ["docker://containous/aloba"]
+  resolves = ["issue-labels"]
 }
 
-action "docker://containous/aloba" {
+action "issue-labels" {
   uses = "docker://containous/aloba"
   secrets = ["GITHUB_TOKEN"]
   args = "action --dry-run=false"
 }
 
 workflow "Aloba: Pull Requests" {
-  resolves = ["docker://containous/aloba-1"]
   on = "pull_request"
+  resolves = ["pull-request-labels"]
 }
 
-action "docker://containous/aloba-1" {
+action "pull-request-labels" {
   uses = "docker://containous/aloba"
   secrets = ["GITHUB_TOKEN"]
   args = "action --dry-run=false"
