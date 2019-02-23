@@ -23,7 +23,7 @@ Available Commands:
 
 ### Command `action`
 
-```shell
+```yaml
 GitHub Action
 
 Usage: action [--flag=flag_argument] [-f[flag_argument]] ...     set flag_argument to flag(s)
@@ -66,7 +66,7 @@ action "pull-request-labels" {
 
 ### Command `label`
 
-```shell
+```yaml
 Add labels and milestone on pull requests and issues.
 
 Usage: label [--flag=flag_argument] [-f[flag_argument]] ...     set flag_argument to flag(s)
@@ -123,7 +123,7 @@ aloba label -o containous -r traefik --web-hook --github.token="xxxxxxxxxx"
 
 ## Command `report`
 
-```shell
+```yaml
 Create a report and publish on Slack.
 
 Usage: report [--flag=flag_argument] [-f[flag_argument]] ...     set flag_argument to flag(s)
@@ -152,5 +152,7 @@ Flags:
 ```shell
 aloba report -o containous -r traefik --github.token="xxxxxxxxxx" --slack.token="xxxxxxxxxx" --slack.channel=C0CDT22PJ
 ```
+
+## What does Myrmica Aloba mean?
 
 ![Myrmica Aloba](http://www.antwiki.org/wiki/images/8/8c/Myrmica_aloba_H_casent0907652.jpg)
