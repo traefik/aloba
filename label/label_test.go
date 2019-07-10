@@ -7,7 +7,6 @@ import (
 )
 
 func TestHasLabel(t *testing.T) {
-
 	basicLabels := []github.Label{
 		{
 			Name: github.String("foo"),
