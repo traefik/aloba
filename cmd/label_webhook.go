@@ -3,14 +3,15 @@ package cmd
 import (
 	"context"
 	"log"
+	"net/url"
 	"strings"
 
 	"github.com/containous/aloba/internal/gh"
 	"github.com/containous/aloba/label"
 	"github.com/containous/aloba/options"
-	"github.com/google/go-github/github"
-	ghw "github.com/ldez/ghwebhook"
-	"github.com/ldez/ghwebhook/eventtype"
+	"github.com/google/go-github/v27/github"
+	ghw "github.com/ldez/ghwebhook/v2"
+	"github.com/ldez/ghwebhook/v2/eventtype"
 )
 
 func runWebHook(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, opts *options.WebHook, dryRun bool) error {
@@ -26,8 +27,8 @@ func runWebHook(ctx context.Context, client *github.Client, owner string, reposi
 	return hook.ListenAndServe()
 }
 
-func onIssue(ctx context.Context, client *github.Client, owner string, repositoryName string, dryRun bool) func(payload *github.WebHookPayload, event *github.IssuesEvent) {
-	return func(_ *github.WebHookPayload, event *github.IssuesEvent) {
+func onIssue(ctx context.Context, client *github.Client, owner string, repositoryName string, dryRun bool) func(*url.URL, *github.WebHookPayload, *github.IssuesEvent) {
+	return func(_ *url.URL, _ *github.WebHookPayload, event *github.IssuesEvent) {
 		if event.GetAction() == stateOpened {
 			go func(event *github.IssuesEvent) {
 				err := onIssueOpened(ctx, client, event, owner, repositoryName, dryRun)
@@ -39,8 +40,8 @@ func onIssue(ctx context.Context, client *github.Client, owner string, repositor
 	}
 }
 
-func onPullRequest(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) func(*github.WebHookPayload, *github.PullRequestEvent) {
-	return func(_ *github.WebHookPayload, event *github.PullRequestEvent) {
+func onPullRequest(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) func(*url.URL, *github.WebHookPayload, *github.PullRequestEvent) {
+	return func(_ *url.URL, _ *github.WebHookPayload, event *github.PullRequestEvent) {
 		if event.GetAction() == stateOpened {
 			go func(event *github.PullRequestEvent) {
 				err := onPullRequestOpened(ctx, client, event, owner, repositoryName, rc, dryRun)
@@ -52,8 +53,8 @@ func onPullRequest(ctx context.Context, client *github.Client, owner string, rep
 	}
 }
 
-func onPullRequestReview(ctx context.Context, client *github.Client, owner string, repositoryName string, dryRun bool) func(*github.WebHookPayload, *github.PullRequestReviewEvent) {
-	return func(_ *github.WebHookPayload, event *github.PullRequestReviewEvent) {
+func onPullRequestReview(ctx context.Context, client *github.Client, owner string, repositoryName string, dryRun bool) func(*url.URL, *github.WebHookPayload, *github.PullRequestReviewEvent) {
+	return func(_ *url.URL, _ *github.WebHookPayload, event *github.PullRequestReviewEvent) {
 		if event.GetAction() == "submitted" {
 			if strings.ToUpper(event.Review.GetState()) == gh.ChangesRequested {
 				go func(event *github.PullRequestReviewEvent) {

@@ -13,8 +13,8 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/containous/aloba/internal/gh"
 	"github.com/containous/aloba/options"
-	"github.com/google/go-github/github"
-	"github.com/ldez/ghwebhook/eventtype"
+	"github.com/google/go-github/v27/github"
+	"github.com/ldez/ghwebhook/v2/eventtype"
 )
 
 // RunGitHubAction Performs the GitHub Action

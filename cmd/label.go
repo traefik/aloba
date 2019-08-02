@@ -10,7 +10,7 @@ import (
 	"github.com/containous/aloba/label"
 	"github.com/containous/aloba/milestone"
 	"github.com/containous/aloba/options"
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v27/github"
 )
 
 const stateOpened = "opened"

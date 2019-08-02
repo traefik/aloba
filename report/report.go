@@ -8,7 +8,7 @@ import (
 	"github.com/containous/aloba/internal/gh"
 	"github.com/containous/aloba/internal/search"
 	"github.com/containous/aloba/label"
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v27/github"
 )
 
 // Model a report model

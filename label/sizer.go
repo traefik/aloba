@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v27/github"
 )
 
 // Limits a set of Pull request limits by size.

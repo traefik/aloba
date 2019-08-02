@@ -3,7 +3,7 @@ package label
 import (
 	"testing"
 
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v27/github"
 )
 
 func TestHasLabel(t *testing.T) {
