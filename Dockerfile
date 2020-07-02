@@ -4,11 +4,16 @@ RUN apk --update upgrade \
 && apk --no-cache --no-progress add git make \
 && rm -rf /var/cache/apk/*
 
-WORKDIR /go/src/github.com/containous/aloba
-COPY . .
+WORKDIR /go/aloba
 
-RUN go get -u github.com/golang/dep/cmd/dep
-RUN make dependencies
+ENV GO111MODULE on
+
+# Download go modules
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+COPY . .
 RUN make build
 
 FROM alpine:3.6
@@ -25,6 +30,6 @@ LABEL "repository"="http://github.com/containous/aloba"
 LABEL "homepage"="http://github.com/containous/aloba"
 LABEL "maintainer"="ldez <ldez@users.noreply.github.com>"
 
-COPY --from=builder /go/src/github.com/containous/aloba/aloba /usr/bin/aloba
+COPY --from=builder /go/aloba/aloba /usr/bin/aloba
 
 ENTRYPOINT ["/usr/bin/aloba"]
