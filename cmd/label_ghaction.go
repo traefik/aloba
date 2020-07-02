@@ -26,7 +26,10 @@ func RunGitHubAction(options *options.GitHubAction, gitHubToken string) error {
 	ctx := context.Background()
 	client := gh.NewGitHubClient(ctx, gitHubToken)
 
-	labeler := NewLabeler(client)
+	owner, repoName := getRepoInfo()
+
+	labeler := NewLabeler(client, owner, repoName)
+	labeler.DryRun = options.DryRun
 
 	eventName := os.Getenv("GITHUB_EVENT_NAME")
 	eventPath := os.Getenv("GITHUB_EVENT_PATH")
@@ -39,9 +42,8 @@ func RunGitHubAction(options *options.GitHubAction, gitHubToken string) error {
 			return fmt.Errorf("unable to read the event file %q: %w", eventPath, err)
 		}
 
-		owner, repoName := getRepoInfo()
 		if event.GetAction() == stateOpened {
-			return labeler.onIssueOpened(ctx, event, owner, repoName, options.DryRun)
+			return labeler.onIssueOpened(ctx, event)
 		}
 
 	case eventtype.PullRequest:
@@ -66,9 +68,8 @@ func RunGitHubAction(options *options.GitHubAction, gitHubToken string) error {
 			log.Printf("Rules: %+v\n", meta)
 		}
 
-		owner, repoName := getRepoInfo()
 		if event.GetAction() == stateOpened {
-			return labeler.onPullRequestOpened(ctx, event, owner, repoName, rc, options.DryRun)
+			return labeler.onPullRequestOpened(ctx, event, rc)
 		}
 
 	default:
