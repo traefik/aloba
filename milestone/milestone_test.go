@@ -73,7 +73,6 @@ func Test_find(t *testing.T) {
 			}
 		})
 	}
-
 }
 
 func Test_weightCalculator(t *testing.T) {

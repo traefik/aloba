@@ -124,7 +124,6 @@ func TestHasStatus(t *testing.T) {
 	for _, test := range testsCases {
 		test := test
 		t.Run(test.name, func(t *testing.T) {
-
 			result := HasStatus(test.labels)
 
 			if result != test.expectedResult {

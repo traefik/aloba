@@ -11,7 +11,7 @@ import (
 	"github.com/google/go-github/v27/github"
 )
 
-// MetaMilestone represent a milestone
+// MetaMilestone represent a milestone.
 type MetaMilestone struct {
 	weight int64
 	name   string
@@ -34,7 +34,7 @@ func (m byWeight) Swap(i, j int) {
 
 var expMilestone = regexp.MustCompile(`(\d+)\.(\d+)(?:\.(\d+))?`)
 
-// Detect the possible milestone of a PR
+// Detect the possible milestone of a PR.
 func Detect(ctx context.Context, client *github.Client, owner, repoName string, pr *github.PullRequest) (*MetaMilestone, error) {
 	opt := &github.MilestoneListOptions{}
 	opt.State = "all"

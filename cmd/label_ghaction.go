@@ -17,7 +17,7 @@ import (
 	"github.com/ldez/ghwebhook/v2/eventtype"
 )
 
-// RunGitHubAction Performs the GitHub Action
+// RunGitHubAction Performs the GitHub Action.
 func RunGitHubAction(options *options.GitHubAction, gitHubToken string) error {
 	if options.Debug {
 		log.Println(options)
@@ -25,6 +25,8 @@ func RunGitHubAction(options *options.GitHubAction, gitHubToken string) error {
 
 	ctx := context.Background()
 	client := gh.NewGitHubClient(ctx, gitHubToken)
+
+	labeler := NewLabeler(client)
 
 	eventName := os.Getenv("GITHUB_EVENT_NAME")
 	eventPath := os.Getenv("GITHUB_EVENT_PATH")
@@ -34,24 +36,24 @@ func RunGitHubAction(options *options.GitHubAction, gitHubToken string) error {
 		event := &github.IssuesEvent{}
 		err := readEvent(eventPath, event)
 		if err != nil {
-			return fmt.Errorf("unable to read the event file %q: %v", eventPath, err)
+			return fmt.Errorf("unable to read the event file %q: %w", eventPath, err)
 		}
 
 		owner, repoName := getRepoInfo()
 		if event.GetAction() == stateOpened {
-			return onIssueOpened(ctx, client, event, owner, repoName, options.DryRun)
+			return labeler.onIssueOpened(ctx, event, owner, repoName, options.DryRun)
 		}
 
 	case eventtype.PullRequest:
 		event := &github.PullRequestEvent{}
 		err := readEvent(eventPath, event)
 		if err != nil {
-			return fmt.Errorf("unable to read the event file %q: %v", eventPath, err)
+			return fmt.Errorf("unable to read the event file %q: %w", eventPath, err)
 		}
 
 		rulesPath := filepath.Join(os.Getenv("GITHUB_WORKSPACE"), ".github", "aloba-rules.toml")
 		if _, err = os.Stat(rulesPath); os.IsNotExist(err) {
-			return fmt.Errorf("unable to read the rules file %q: %v", rulesPath, err)
+			return fmt.Errorf("unable to read the rules file %q: %w", rulesPath, err)
 		}
 
 		rc := &RulesConfiguration{}
@@ -66,7 +68,7 @@ func RunGitHubAction(options *options.GitHubAction, gitHubToken string) error {
 
 		owner, repoName := getRepoInfo()
 		if event.GetAction() == stateOpened {
-			return onPullRequestOpened(ctx, client, event, owner, repoName, rc, options.DryRun)
+			return labeler.onPullRequestOpened(ctx, event, owner, repoName, rc, options.DryRun)
 		}
 
 	default:

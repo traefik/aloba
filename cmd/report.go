@@ -8,7 +8,7 @@ import (
 	"github.com/containous/aloba/report"
 )
 
-// Report create a report and publish on Slack
+// Report create a report and publish on Slack.
 func Report(options *options.Report) error {
 	if options.ServerMode {
 		server := &server{options: options}
@@ -20,9 +20,10 @@ func Report(options *options.Report) error {
 
 func launch(options *options.Report) error {
 	ctx := context.Background()
-	client := gh.NewGitHubClient(ctx, options.GitHub.Token)
 
-	model, err := report.MakeReport(ctx, client, options.GitHub.Owner, options.GitHub.RepositoryName)
+	reporter := report.NewReporter(gh.NewGitHubClient(ctx, options.GitHub.Token))
+
+	model, err := reporter.Make(ctx, options.GitHub.Owner, options.GitHub.RepositoryName)
 	if err != nil {
 		return err
 	}

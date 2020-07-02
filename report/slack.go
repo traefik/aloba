@@ -7,9 +7,8 @@ import (
 	"github.com/nlopes/slack"
 )
 
-// SendToSlack Create and send a report to Slack
+// SendToSlack Create and send a report to Slack.
 func SendToSlack(options *options.Slack, model *Model) error {
-
 	message := makeSlackMessage(model)
 
 	if len(message) != 0 {
@@ -50,7 +49,7 @@ func makeSlackMessage(model *Model) string {
 
 	if len(msg) != 0 {
 		msg = "By your powers combined I am Captain PR! We gonna take PR down to zero!\n\n" + msg
-		//TODO must authorize bot to call @channel
+		// TODO must authorize bot to call @channel
 		// msg = "<!channel> By your powers combined I am Captain PR! We gonna take PR down to zero!\n\n" + msg
 	}
 

@@ -5,11 +5,10 @@ import (
 
 	"github.com/containous/aloba/internal/search"
 	"github.com/containous/aloba/label"
-	"github.com/google/go-github/v27/github"
 )
 
-func runStandalone(ctx context.Context, client *github.Client, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) error {
-	issues, err := search.FindOpenPR(ctx, client, owner, repositoryName,
+func (l *Labeler) runStandalone(ctx context.Context, owner string, repositoryName string, rc *RulesConfiguration, dryRun bool) error {
+	issues, err := search.FindOpenPR(ctx, l.client, owner, repositoryName,
 		search.WithExcludedLabels(
 			label.SizeLabelPrefix+label.Small,
 			label.SizeLabelPrefix+label.Medium,
@@ -20,16 +19,18 @@ func runStandalone(ctx context.Context, client *github.Client, owner string, rep
 	}
 
 	for _, issue := range issues {
-		err := addLabelsToPR(ctx, client, owner, repositoryName, issue, rc, dryRun)
+		err := l.addLabelsToPR(ctx, owner, repositoryName, issue, rc, dryRun)
 		if err != nil {
 			return err
 		}
+
 		if issue.Milestone == nil {
-			pr, _, err := client.PullRequests.Get(ctx, owner, repositoryName, issue.GetNumber())
+			pr, _, err := l.client.PullRequests.Get(ctx, owner, repositoryName, issue.GetNumber())
 			if err != nil {
 				return err
 			}
-			err = addMilestoneToPR(ctx, client, owner, repositoryName, pr)
+
+			err = l.addMilestoneToPR(ctx, owner, repositoryName, pr)
 			if err != nil {
 				return err
 			}

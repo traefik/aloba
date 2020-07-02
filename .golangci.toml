@@ -31,21 +31,41 @@
     "dupl",
     "prealloc",
     "scopelint",
+    "gomnd",
+    "wsl",
+    "goerr113",
+    "testpackage",
+    "godox",
   ]
 
 [issues]
   exclude-use-default = false
   max-per-linter = 0
   max-same-issues = 0
-  exclude = []
+  exclude = [
+    "ST1000: at least one file in a package should have a package comment"
+  ]
+  [[issues.exclude-rules]]
+    path = "(.+)_test.go"
+    linters = ["goconst", "funlen"]
   [[issues.exclude-rules]]
     path = "meta/version.go"
     text = "`(version|commit|date)` is a global variable"
+
   [[issues.exclude-rules]]
     path = "report/report.go"
     text = "`loginMap` is a global variable"
+
   [[issues.exclude-rules]]
     path = "milestone/milestone.go"
     text = "`expMilestone` is a global variable"
+
+  [[issues.exclude-rules]]
+    path = "cmd/label_webhook.go"
+    text = "cognitive complexity (\\d+) of func `\\(\\*Labeler\\)\\.onPullRequestReview` is high"
+
+  [[issues.exclude-rules]]
+    path = "cmd/label_webhook.go"
+    text = "`if event\\.GetAction\\(\\) == \\\"submitted\\\"` is deeply nested"
 
 

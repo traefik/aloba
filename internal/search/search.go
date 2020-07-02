@@ -18,7 +18,35 @@ func (a byCreated) Less(i, j int) bool {
 
 // FindOpenPR search and find open Pull Requests.
 func FindOpenPR(ctx context.Context, client *github.Client, owner string, repositoryName string, parameters ...Parameter) ([]github.Issue, error) {
+	query := createQuery(owner, repositoryName, parameters)
 
+	searchOptions := &github.SearchOptions{
+		Sort:        "created",
+		Order:       "desc",
+		ListOptions: github.ListOptions{PerPage: 100},
+	}
+
+	var issues []github.Issue
+	for {
+		issuesSearchResult, resp, err := client.Search.Issues(ctx, query, searchOptions)
+		if err != nil {
+			return nil, err
+		}
+
+		issues = append(issues, issuesSearchResult.Issues...)
+		if resp.NextPage == 0 {
+			break
+		}
+
+		searchOptions.Page = resp.NextPage
+	}
+
+	sort.Sort(byCreated(issues))
+
+	return issues, nil
+}
+
+func createQuery(owner, repositoryName string, parameters []Parameter) string {
 	var filter string
 	for _, param := range parameters {
 		if param != nil {
@@ -26,35 +54,5 @@ func FindOpenPR(ctx context.Context, client *github.Client, owner string, reposi
 		}
 	}
 
-	query := fmt.Sprintf("repo:%s/%s type:pr state:open %s", owner, repositoryName, filter)
-
-	options := &github.SearchOptions{
-		Sort:        "created",
-		Order:       "desc",
-		ListOptions: github.ListOptions{PerPage: 25},
-	}
-
-	issues, err := findIssues(ctx, client, query, options)
-	if err != nil {
-		return nil, err
-	}
-	sort.Sort(byCreated(issues))
-
-	return issues, nil
-}
-
-func findIssues(ctx context.Context, client *github.Client, query string, searchOptions *github.SearchOptions) ([]github.Issue, error) {
-	var allIssues []github.Issue
-	for {
-		issuesSearchResult, resp, err := client.Search.Issues(ctx, query, searchOptions)
-		if err != nil {
-			return nil, err
-		}
-		allIssues = append(allIssues, issuesSearchResult.Issues...)
-		if resp.NextPage == 0 {
-			break
-		}
-		searchOptions.Page = resp.NextPage
-	}
-	return allIssues, nil
+	return fmt.Sprintf("repo:%s/%s type:pr state:open %s", owner, repositoryName, filter)
 }

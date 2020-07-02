@@ -20,7 +20,7 @@ type Limit struct {
 	FilesLimit int
 }
 
-// Changes represent the changes of a Pull Request.
+// Changes represents the changes of a Pull Request.
 type Changes struct {
 	Number       int
 	AdditionSum  int
@@ -28,7 +28,7 @@ type Changes struct {
 	ChangedFiles int
 }
 
-// GetCurrentSize get the size of a Pull Request.
+// GetCurrentSize gets the size of a Pull Request.
 func GetCurrentSize(issueLabels []github.Label) string {
 	for _, lbl := range issueLabels {
 		if strings.HasPrefix(lbl.GetName(), SizeLabelPrefix) {
@@ -38,7 +38,7 @@ func GetCurrentSize(issueLabels []github.Label) string {
 	return ""
 }
 
-// GetSizeLabel evaluate PR size (exclude vendor files)
+// GetSizeLabel evaluates PR size (exclude vendor files).
 func GetSizeLabel(ctx context.Context, client *github.Client, owner string, repositoryName string, prNumber int, limits Limits) (string, error) {
 	changes, err := calculateChanges(ctx, client, owner, repositoryName, prNumber)
 	if err != nil {
@@ -48,9 +48,8 @@ func GetSizeLabel(ctx context.Context, client *github.Client, owner string, repo
 	return SizeLabelPrefix + getSizeLabel(changes, limits), nil
 }
 
-// calculateChanges count changes (exclude vendor files)
+// calculateChanges counts changes (exclude vendor files).
 func calculateChanges(ctx context.Context, client *github.Client, owner string, repositoryName string, prNumber int) (*Changes, error) {
-
 	changes := &Changes{
 		Number: prNumber,
 	}
@@ -66,7 +65,6 @@ func calculateChanges(ctx context.Context, client *github.Client, owner string, 
 		}
 
 		for _, cf := range cfs {
-
 			if !strings.HasPrefix(cf.GetFilename(), "vendor/") && cf.GetFilename() != "glide.lock" && cf.GetFilename() != "glide.yml" {
 				changes.ChangedFiles++
 				changes.AdditionSum += cf.GetAdditions()

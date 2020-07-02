@@ -3,7 +3,7 @@ package options
 // Empty options.
 type Empty struct{}
 
-// Report options
+// Report options.
 type Report struct {
 	Debug      bool    `description:"Debug mode."`
 	DryRun     bool    `long:"dry-run" description:"Dry run mode."`
@@ -13,7 +13,7 @@ type Report struct {
 	Slack      *Slack  `description:"Slack options."`
 }
 
-// Slack options
+// Slack options.
 type Slack struct {
 	Token     string `description:"Slack token."`
 	ChannelID string `long:"channel" description:"Slack channel ID."`
@@ -21,14 +21,14 @@ type Slack struct {
 	BotName   string `long:"bot-name" description:"Bot name."`
 }
 
-// GitHub options
+// GitHub options.
 type GitHub struct {
 	Token          string `description:"GitHub token."`
 	Owner          string `short:"o" description:"Repository owner."`
 	RepositoryName string `long:"repo-name" short:"r" description:"Repository name."`
 }
 
-// Label options
+// Label options.
 type Label struct {
 	Debug         bool     `description:"Debug mode."`
 	DryRun        bool     `long:"dry-run" description:"Dry run mode."`
@@ -37,13 +37,13 @@ type Label struct {
 	GitHub        *GitHub  `description:"GitHub options."`
 }
 
-// GitHubAction options
+// GitHubAction options.
 type GitHubAction struct {
 	Debug  bool `description:"Debug mode."`
 	DryRun bool `long:"dry-run" description:"Dry run mode."`
 }
 
-// WebHook options
+// WebHook options.
 type WebHook struct {
 	Port   int    `description:"WebHook port."`
 	Secret string `description:"WebHook secret."`

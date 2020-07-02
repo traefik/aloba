@@ -8,14 +8,14 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// Review status
+// Review status.
 const (
 	Approved         = "APPROVED"
 	ChangesRequested = "CHANGES_REQUESTED"
 	Commented        = "COMMENTED"
 )
 
-// NewGitHubClient create a new GitHub client
+// NewGitHubClient create a new GitHub client.
 func NewGitHubClient(ctx context.Context, token string) *github.Client {
 	var client *github.Client
 	if len(token) == 0 {
@@ -30,9 +30,8 @@ func NewGitHubClient(ctx context.Context, token string) *github.Client {
 	return client
 }
 
-// GetReviewStatus get reviews status of a Pull Request
+// GetReviewStatus get reviews status of a Pull Request.
 func GetReviewStatus(ctx context.Context, client *github.Client, owner string, repositoryName string, members []*github.User, prNumber int) (map[string]string, map[string]string, error) {
-
 	opts := &github.ListOptions{
 		PerPage: 100,
 	}
@@ -69,7 +68,7 @@ func GetReviewStatus(ctx context.Context, client *github.Client, owner string, r
 	return approvedReviews, changesRequestedReviews, nil
 }
 
-// GetTeamMembers get members of a team
+// GetTeamMembers get members of a team.
 func GetTeamMembers(ctx context.Context, client *github.Client, owner string, teamName string) ([]*github.User, error) {
 	team, err := getTeamByName(ctx, client, owner, teamName)
 	if err != nil {

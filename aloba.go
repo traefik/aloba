@@ -13,7 +13,6 @@ import (
 )
 
 func main() {
-
 	rootCmd := createRootCommand()
 	flag := flaeg.New(rootCmd, os.Args[1:])
 
