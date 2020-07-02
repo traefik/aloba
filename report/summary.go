@@ -23,10 +23,10 @@ type prSummary struct {
 	Milestone           string
 }
 
-type transformer func(ctx context.Context, owner string, repositoryName string, members []*github.User, issue github.Issue) prSummary
+type transformer func(ctx context.Context, members []*github.User, issue github.Issue) prSummary
 
-func (r *Reporter) makePRSummaries(ctx context.Context, owner string, repositoryName string, members []*github.User, transform transformer, searchFilter ...search.Parameter) []prSummary {
-	issues, err := search.FindOpenPR(ctx, r.client, owner, repositoryName, searchFilter...)
+func (r *Reporter) makePRSummaries(ctx context.Context, members []*github.User, transform transformer, searchFilter ...search.Parameter) []prSummary {
+	issues, err := search.FindOpenPR(ctx, r.client, r.owner, r.repoName, searchFilter...)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -34,7 +34,7 @@ func (r *Reporter) makePRSummaries(ctx context.Context, owner string, repository
 	var summaries []prSummary
 
 	for _, issue := range issues {
-		summary := transform(ctx, owner, repositoryName, members, issue)
+		summary := transform(ctx, members, issue)
 		summaries = append(summaries, summary)
 	}
 

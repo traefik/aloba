@@ -21,9 +21,9 @@ func Report(options *options.Report) error {
 func launch(options *options.Report) error {
 	ctx := context.Background()
 
-	reporter := report.NewReporter(gh.NewGitHubClient(ctx, options.GitHub.Token))
+	reporter := report.NewReporter(gh.NewGitHubClient(ctx, options.GitHub.Token), options.GitHub.Owner, options.GitHub.RepositoryName)
 
-	model, err := reporter.Make(ctx, options.GitHub.Owner, options.GitHub.RepositoryName)
+	model, err := reporter.Make(ctx)
 	if err != nil {
 		return err
 	}
