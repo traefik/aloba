@@ -61,7 +61,7 @@ func RunGitHubAction(options *options.GitHubAction, gitHubToken string) error {
 		rc := &RulesConfiguration{}
 		meta, err := toml.DecodeFile(rulesPath, rc)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to decode file %s: %w", rulesPath, err)
 		}
 
 		if options.DryRun {
@@ -82,7 +82,7 @@ func RunGitHubAction(options *options.GitHubAction, gitHubToken string) error {
 func readEvent(eventPath string, event interface{}) error {
 	content, err := ioutil.ReadFile(eventPath)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read file %s: %w", eventPath, err)
 	}
 
 	return json.Unmarshal(content, event)

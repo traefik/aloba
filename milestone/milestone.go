@@ -42,7 +42,7 @@ func Detect(ctx context.Context, client *github.Client, owner, repoName string, 
 
 	stones, _, err := client.Issues.ListMilestones(ctx, owner, repoName, opt)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to list milestones: %w", err)
 	}
 
 	metas := makeMetas(stones)

@@ -2,6 +2,7 @@ package label
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/google/go-github/v27/github"
@@ -61,7 +62,7 @@ func calculateChanges(ctx context.Context, client *github.Client, owner string, 
 	for {
 		cfs, resp, err := client.PullRequests.ListFiles(ctx, owner, repositoryName, prNumber, opt)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to list files from PR %d: %w", prNumber, err)
 		}
 
 		for _, cf := range cfs {

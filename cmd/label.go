@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -36,7 +37,7 @@ func Label(options *options.Label) error {
 	rc := &RulesConfiguration{}
 	meta, err := toml.DecodeFile(options.RulesFilePath, rc)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read TOML file (%s): %w", options.RulesFilePath, err)
 	}
 
 	if options.Debug {
@@ -70,7 +71,7 @@ func NewLabeler(client *github.Client, owner, repoName string) *Labeler {
 func (l *Labeler) addMilestoneToPR(ctx context.Context, pr *github.PullRequest) error {
 	meta, err := milestone.Detect(ctx, l.client, l.owner, l.repoName, pr)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to detect milestone for PR %d: %w", pr.GetNumber(), err)
 	}
 
 	if pr.Milestone == nil && meta != nil {
@@ -79,7 +80,7 @@ func (l *Labeler) addMilestoneToPR(ctx context.Context, pr *github.PullRequest) 
 		}
 		_, _, errMil := l.client.Issues.Edit(ctx, l.owner, l.repoName, pr.GetNumber(), ir)
 		if errMil != nil {
-			return errMil
+			return fmt.Errorf("failed to add milestone to PR %d: %w", pr.GetNumber(), errMil)
 		}
 	}
 	return nil
@@ -91,14 +92,14 @@ func (l *Labeler) addLabelsToPR(ctx context.Context, issue github.Issue, rc *Rul
 	// AREA
 	areas, err := label.DetectAreas(ctx, l.client, l.owner, l.repoName, issue.GetNumber(), rc.Rules)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to detect area for PR %d: %w", issue.GetNumber(), err)
 	}
 	labels = append(labels, areas...)
 
 	// SIZE
 	sizeLabel, err := l.getSizeLabel(ctx, issue, rc.Limits)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to computethe size of the PR %d: %w", issue.GetNumber(), err)
 	}
 	if sizeLabel != "" {
 		labels = append(labels, sizeLabel)
@@ -129,7 +130,7 @@ func (l *Labeler) addLabelsToPR(ctx context.Context, issue github.Issue, rc *Rul
 
 	_, _, err = l.client.Issues.AddLabelsToIssue(ctx, l.owner, l.repoName, issue.GetNumber(), addedLabels)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to add label to PR %d: %w", issue.GetNumber(), err)
 	}
 
 	return nil
@@ -146,7 +147,7 @@ func (l *Labeler) getSizeLabel(ctx context.Context, issue github.Issue, limits l
 			// Remove current size
 			_, err := l.client.Issues.RemoveLabelForIssue(ctx, l.owner, l.repoName, issue.GetNumber(), currentSize)
 			if err != nil {
-				return "", err
+				return "", fmt.Errorf("failed to remove size label to PR %d: %w", issue.GetNumber(), err)
 			}
 		}
 		return size, nil
@@ -160,7 +161,7 @@ func (l *Labeler) onIssueOpened(ctx context.Context, event *github.IssuesEvent) 
 
 	issue, _, err := l.client.Issues.Get(ctx, l.owner, l.repoName, event.Issue.GetNumber())
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to get issue %d: %w", issue.GetNumber(), err)
 	}
 
 	if len(issue.Labels) == 0 {
@@ -171,7 +172,7 @@ func (l *Labeler) onIssueOpened(ctx context.Context, event *github.IssuesEvent) 
 
 		_, _, err = l.client.Issues.AddLabelsToIssue(ctx, l.owner, l.repoName, issue.GetNumber(), []string{label.StatusNeedsTriage})
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to add label to issue %d: %w", issue.GetNumber(), err)
 		}
 	}
 
@@ -184,18 +185,18 @@ func (l *Labeler) onPullRequestOpened(ctx context.Context, event *github.PullReq
 
 	issue, _, err := l.client.Issues.Get(ctx, l.owner, l.repoName, event.GetNumber())
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to get PR %d: %w", event.GetNumber(), err)
 	}
 
 	err = l.addLabelsToPR(ctx, *issue, rc)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to add labels on PR %d: %w", issue.GetNumber(), err)
 	}
 
 	if event.PullRequest.Milestone == nil {
 		err = l.addMilestoneToPR(ctx, event.PullRequest)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to add milestone on PR %d: %w", issue.GetNumber(), err)
 		}
 	}
 

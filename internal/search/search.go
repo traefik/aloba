@@ -30,7 +30,7 @@ func FindOpenPR(ctx context.Context, client *github.Client, owner string, reposi
 	for {
 		issuesSearchResult, resp, err := client.Search.Issues(ctx, query, searchOptions)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to search PR on %s/%s: %w", owner, repositoryName, err)
 		}
 
 		issues = append(issues, issuesSearchResult.Issues...)

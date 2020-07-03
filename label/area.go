@@ -2,6 +2,7 @@ package label
 
 import (
 	"context"
+	"fmt"
 	"regexp"
 	"strings"
 
@@ -25,7 +26,7 @@ func DetectAreas(ctx context.Context, client *github.Client, owner string, repos
 	for {
 		cfs, resp, err := client.PullRequests.ListFiles(ctx, owner, repositoryName, prNumber, opt)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to list files from PR %d: %w", prNumber, err)
 		}
 
 		for _, cf := range cfs {

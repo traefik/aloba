@@ -61,7 +61,7 @@ func (l *Labeler) onPullRequestReview(ctx context.Context) func(*url.URL, *githu
 				go func(event *github.PullRequestReviewEvent) {
 					issue, _, err := l.client.Issues.Get(ctx, l.owner, l.repoName, event.PullRequest.GetNumber())
 					if err != nil {
-						log.Println(err)
+						log.Printf("failed to get PR %d: %v", event.PullRequest.GetNumber(), err)
 						return
 					}
 
@@ -74,7 +74,7 @@ func (l *Labeler) onPullRequestReview(ctx context.Context) func(*url.URL, *githu
 					} else {
 						_, _, err = l.client.Issues.AddLabelsToIssue(ctx, l.owner, l.repoName, issue.GetNumber(), []string{label.ContributorWaitingForCorrections})
 						if err != nil {
-							log.Println(err)
+							log.Printf("failed to add label on PR %d: %v", event.PullRequest.GetNumber(), err)
 							return
 						}
 					}
@@ -86,13 +86,13 @@ func (l *Labeler) onPullRequestReview(ctx context.Context) func(*url.URL, *githu
 				go func(event *github.PullRequestReviewEvent) {
 					issue, _, err := l.client.Issues.Get(ctx, l.owner, l.repoName, event.PullRequest.GetNumber())
 					if err != nil {
-						log.Println(err)
+						log.Printf("failed to get PR %d: %v", event.PullRequest.GetNumber(), err)
 						return
 					}
 
 					err = l.removeLabel(ctx, issue, label.ContributorWaitingForCorrections)
 					if err != nil {
-						log.Println(err)
+						log.Printf("failed to remove label on PR %d: %v", event.PullRequest.GetNumber(), err)
 						return
 					}
 				}(event)

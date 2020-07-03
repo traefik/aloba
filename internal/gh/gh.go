@@ -17,17 +17,12 @@ const (
 
 // NewGitHubClient create a new GitHub client.
 func NewGitHubClient(ctx context.Context, token string) *github.Client {
-	var client *github.Client
-	if len(token) == 0 {
-		client = github.NewClient(nil)
-	} else {
-		ts := oauth2.StaticTokenSource(
-			&oauth2.Token{AccessToken: token},
-		)
-		tc := oauth2.NewClient(ctx, ts)
-		client = github.NewClient(tc)
+	if token == "" {
+		return github.NewClient(nil)
 	}
-	return client
+
+	ts := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})
+	return github.NewClient(oauth2.NewClient(ctx, ts))
 }
 
 // GetReviewStatus get reviews status of a Pull Request.
@@ -80,7 +75,7 @@ func GetTeamMembers(ctx context.Context, client *github.Client, owner string, te
 
 	members, _, err := client.Teams.ListTeamMembers(ctx, team.GetID(), orgTeamMemberOpts)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get team %s on %s: %w", teamName, owner, err)
 	}
 
 	return members, nil
@@ -89,7 +84,7 @@ func GetTeamMembers(ctx context.Context, client *github.Client, owner string, te
 func getTeamByName(ctx context.Context, client *github.Client, owner string, teamName string) (*github.Team, error) {
 	teams, _, err := client.Teams.ListTeams(ctx, owner, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to list teams on %s: %w", owner, err)
 	}
 
 	for _, team := range teams {
