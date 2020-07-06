@@ -26,7 +26,7 @@ func NewGitHubClient(ctx context.Context, token string) *github.Client {
 }
 
 // GetReviewStatus get reviews status of a Pull Request.
-func GetReviewStatus(ctx context.Context, client *github.Client, owner string, repositoryName string, members []*github.User, prNumber int) (map[string]string, map[string]string, error) {
+func GetReviewStatus(ctx context.Context, client *github.Client, owner, repositoryName string, members []*github.User, prNumber int) (map[string]string, map[string]string, error) {
 	opts := &github.ListOptions{
 		PerPage: 100,
 	}
@@ -64,7 +64,7 @@ func GetReviewStatus(ctx context.Context, client *github.Client, owner string, r
 }
 
 // GetTeamMembers get members of a team.
-func GetTeamMembers(ctx context.Context, client *github.Client, owner string, teamName string) ([]*github.User, error) {
+func GetTeamMembers(ctx context.Context, client *github.Client, owner, teamName string) ([]*github.User, error) {
 	team, err := getTeamByName(ctx, client, owner, teamName)
 	if err != nil {
 		return nil, err
@@ -81,7 +81,7 @@ func GetTeamMembers(ctx context.Context, client *github.Client, owner string, te
 	return members, nil
 }
 
-func getTeamByName(ctx context.Context, client *github.Client, owner string, teamName string) (*github.Team, error) {
+func getTeamByName(ctx context.Context, client *github.Client, owner, teamName string) (*github.Team, error) {
 	teams, _, err := client.Teams.ListTeams(ctx, owner, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to list teams on %s: %w", owner, err)

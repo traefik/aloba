@@ -16,7 +16,7 @@ type Rule struct {
 }
 
 // DetectAreas for a Pull Request.
-func DetectAreas(ctx context.Context, client *github.Client, owner string, repositoryName string, prNumber int, rules []Rule) ([]string, error) {
+func DetectAreas(ctx context.Context, client *github.Client, owner, repositoryName string, prNumber int, rules []Rule) ([]string, error) {
 	areasMap := make(map[string]struct{})
 
 	opt := &github.ListOptions{
@@ -50,6 +50,6 @@ func DetectAreas(ctx context.Context, client *github.Client, owner string, repos
 	return areas, nil
 }
 
-func isRelatedTo(filename string, exp string) bool {
+func isRelatedTo(filename, exp string) bool {
 	return regexp.MustCompile(exp).MatchString(filename)
 }

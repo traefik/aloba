@@ -36,6 +36,7 @@
     "goerr113",
     "testpackage",
     "godox",
+    "noctx",
   ]
 
 [issues]

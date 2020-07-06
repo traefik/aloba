@@ -41,7 +41,7 @@ func (r *Reporter) makePRSummaries(ctx context.Context, members []*github.User, 
 	return summaries
 }
 
-func newPRSummary(issue github.Issue, approved []string, requestChanges []string) prSummary {
+func newPRSummary(issue github.Issue, approved, requestChanges []string) prSummary {
 	var areas []string
 	var size string
 	for _, lbl := range issue.Labels {

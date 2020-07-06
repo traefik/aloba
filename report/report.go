@@ -37,7 +37,7 @@ type Reporter struct {
 }
 
 // NewReporter creates a new Reporter.
-func NewReporter(client *github.Client, owner string, repoName string) *Reporter {
+func NewReporter(client *github.Client, owner, repoName string) *Reporter {
 	return &Reporter{
 		client:   client,
 		owner:    owner,

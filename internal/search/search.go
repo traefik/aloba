@@ -17,7 +17,7 @@ func (a byCreated) Less(i, j int) bool {
 }
 
 // FindOpenPR search and find open Pull Requests.
-func FindOpenPR(ctx context.Context, client *github.Client, owner string, repositoryName string, parameters ...Parameter) ([]github.Issue, error) {
+func FindOpenPR(ctx context.Context, client *github.Client, owner, repositoryName string, parameters ...Parameter) ([]github.Issue, error) {
 	query := createQuery(owner, repositoryName, parameters)
 
 	searchOptions := &github.SearchOptions{

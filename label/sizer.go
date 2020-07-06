@@ -40,7 +40,7 @@ func GetCurrentSize(issueLabels []github.Label) string {
 }
 
 // GetSizeLabel evaluates PR size (exclude vendor files).
-func GetSizeLabel(ctx context.Context, client *github.Client, owner string, repositoryName string, prNumber int, limits Limits) (string, error) {
+func GetSizeLabel(ctx context.Context, client *github.Client, owner, repositoryName string, prNumber int, limits Limits) (string, error) {
 	changes, err := calculateChanges(ctx, client, owner, repositoryName, prNumber)
 	if err != nil {
 		return "", err
@@ -50,7 +50,7 @@ func GetSizeLabel(ctx context.Context, client *github.Client, owner string, repo
 }
 
 // calculateChanges counts changes (exclude vendor files).
-func calculateChanges(ctx context.Context, client *github.Client, owner string, repositoryName string, prNumber int) (*Changes, error) {
+func calculateChanges(ctx context.Context, client *github.Client, owner, repositoryName string, prNumber int) (*Changes, error) {
 	changes := &Changes{
 		Number: prNumber,
 	}
