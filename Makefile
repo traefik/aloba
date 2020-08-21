@@ -9,7 +9,7 @@ SHA := $(shell git rev-parse --short HEAD)
 VERSION := $(if $(TAG_NAME),$(TAG_NAME),$(SHA))
 BUILD_DATE := $(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
 
-VERSION_PACKAGE=github.com/containous/aloba/meta
+VERSION_PACKAGE=github.com/traefik/aloba/meta
 
 default: clean check test build
 

@@ -3,9 +3,9 @@ package cmd
 import (
 	"context"
 
-	"github.com/containous/aloba/internal/gh"
-	"github.com/containous/aloba/options"
-	"github.com/containous/aloba/report"
+	"github.com/traefik/aloba/internal/gh"
+	"github.com/traefik/aloba/options"
+	"github.com/traefik/aloba/report"
 )
 
 // Report create a report and publish on Slack.

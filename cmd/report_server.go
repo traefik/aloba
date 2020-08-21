@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/containous/aloba/options"
+	"github.com/traefik/aloba/options"
 )
 
 type server struct {

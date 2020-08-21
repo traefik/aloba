@@ -1,4 +1,4 @@
-module github.com/containous/aloba
+module github.com/traefik/aloba
 
 go 1.12
 
@@ -13,6 +13,6 @@ require (
 	github.com/nlopes/slack v0.0.0-20190214144636-e73b432e20b0
 	github.com/ogier/pflag v0.0.0-20160129220114-45c278ab3607
 	github.com/pkg/errors v0.8.1 // indirect
-	github.com/stretchr/testify v1.3.0 // indirect
+	github.com/stretchr/testify v1.6.1 // indirect
 	golang.org/x/oauth2 v0.0.0-20190212230446-3e8b2be13635
 )

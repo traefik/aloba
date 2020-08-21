@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
-	"github.com/containous/aloba/internal/gh"
-	"github.com/containous/aloba/label"
-	"github.com/containous/aloba/milestone"
-	"github.com/containous/aloba/options"
 	"github.com/google/go-github/v27/github"
+	"github.com/traefik/aloba/internal/gh"
+	"github.com/traefik/aloba/label"
+	"github.com/traefik/aloba/milestone"
+	"github.com/traefik/aloba/options"
 )
 
 const stateOpened = "opened"
@@ -141,6 +141,7 @@ func (l *Labeler) getSizeLabel(ctx context.Context, issue github.Issue, limits l
 	if err != nil {
 		return "", err
 	}
+
 	currentSize := label.GetCurrentSize(issue.Labels)
 	if currentSize != size {
 		if currentSize != "" {
@@ -152,6 +153,7 @@ func (l *Labeler) getSizeLabel(ctx context.Context, issue github.Issue, limits l
 		}
 		return size, nil
 	}
+
 	return "", nil
 }
 
@@ -161,7 +163,7 @@ func (l *Labeler) onIssueOpened(ctx context.Context, event *github.IssuesEvent) 
 
 	issue, _, err := l.client.Issues.Get(ctx, l.owner, l.repoName, event.Issue.GetNumber())
 	if err != nil {
-		return fmt.Errorf("failed to get issue %d: %w", issue.GetNumber(), err)
+		return fmt.Errorf("failed to get issue %d: %w", event.Issue.GetNumber(), err)
 	}
 
 	if len(issue.Labels) == 0 {

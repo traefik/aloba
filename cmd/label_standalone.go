@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/containous/aloba/internal/search"
-	"github.com/containous/aloba/label"
+	"github.com/traefik/aloba/internal/search"
+	"github.com/traefik/aloba/label"
 )
 
 func (l *Labeler) runStandalone(ctx context.Context, rc *RulesConfiguration) error {

@@ -26,8 +26,8 @@ LABEL "com.github.actions.description"="Add labels and milestone on pull request
 LABEL "com.github.actions.icon"="cpu"
 LABEL "com.github.actions.color"="purple"
 
-LABEL "repository"="http://github.com/containous/aloba"
-LABEL "homepage"="http://github.com/containous/aloba"
+LABEL "repository"="http://github.com/traefik/aloba"
+LABEL "homepage"="http://github.com/traefik/aloba"
 LABEL "maintainer"="ldez <ldez@users.noreply.github.com>"
 
 COPY --from=builder /go/aloba/aloba /usr/bin/aloba

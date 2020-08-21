@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/containous/aloba/internal/gh"
-	"github.com/containous/aloba/internal/search"
-	"github.com/containous/aloba/label"
 	"github.com/google/go-github/v27/github"
+	"github.com/traefik/aloba/internal/gh"
+	"github.com/traefik/aloba/internal/search"
+	"github.com/traefik/aloba/label"
 )
 
 // Model a report model.
@@ -159,7 +159,7 @@ func makeMessage(summaries []prSummary, details bool) string {
 }
 
 func makeLine(summary prSummary, details bool) string {
-	line := fmt.Sprintf("<https://github.com/containous/traefik/pull/%[1]d|#%[1]d>:", summary.Number)
+	line := fmt.Sprintf("<https://github.com/traefik/traefik/pull/%[1]d|#%[1]d>:", summary.Number)
 	line += fmt.Sprintf(" %3d days,", summary.DaysBetweenCreation)
 
 	line += fmt.Sprintf(" %d LGTM", len(summary.Approved))
