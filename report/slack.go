@@ -3,8 +3,8 @@ package report
 import (
 	"strings"
 
-	"github.com/containous/aloba/options"
 	"github.com/nlopes/slack"
+	"github.com/traefik/aloba/options"
 )
 
 // SendToSlack Create and send a report to Slack.

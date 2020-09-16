@@ -6,12 +6,12 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/containous/aloba/internal/gh"
-	"github.com/containous/aloba/label"
-	"github.com/containous/aloba/options"
 	"github.com/google/go-github/v27/github"
 	ghw "github.com/ldez/ghwebhook/v2"
 	"github.com/ldez/ghwebhook/v2/eventtype"
+	"github.com/traefik/aloba/internal/gh"
+	"github.com/traefik/aloba/label"
+	"github.com/traefik/aloba/options"
 )
 
 func (l *Labeler) runWebHook(ctx context.Context, rc *RulesConfiguration, opts *options.WebHook) error {

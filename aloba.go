@@ -5,11 +5,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/containous/aloba/cmd"
-	"github.com/containous/aloba/meta"
-	"github.com/containous/aloba/options"
 	"github.com/containous/flaeg"
 	"github.com/ogier/pflag"
+	"github.com/traefik/aloba/cmd"
+	"github.com/traefik/aloba/meta"
+	"github.com/traefik/aloba/options"
 )
 
 func main() {

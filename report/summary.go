@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/containous/aloba/internal/search"
-	"github.com/containous/aloba/label"
 	"github.com/google/go-github/v27/github"
+	"github.com/traefik/aloba/internal/search"
+	"github.com/traefik/aloba/label"
 )
 
 type prSummary struct {

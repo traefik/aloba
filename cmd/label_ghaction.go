@@ -11,10 +11,10 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
-	"github.com/containous/aloba/internal/gh"
-	"github.com/containous/aloba/options"
 	"github.com/google/go-github/v27/github"
 	"github.com/ldez/ghwebhook/v2/eventtype"
+	"github.com/traefik/aloba/internal/gh"
+	"github.com/traefik/aloba/options"
 )
 
 // RunGitHubAction Performs the GitHub Action.

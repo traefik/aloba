@@ -1,8 +1,8 @@
 # Myrmica Aloba: Add labels and milestone on pull requests and issues.
 
-[![Release](https://img.shields.io/github/release/containous/aloba.svg?style=flat)](https://github.com/containous/aloba/releases/latest)
-[![Build Status](https://travis-ci.com/containous/aloba.svg?branch=master)](https://travis-ci.com/containous/aloba)
-[![Docker Build Status](https://img.shields.io/docker/build/containous/aloba.svg)](https://hub.docker.com/r/containous/aloba/builds/)
+[![Release](https://img.shields.io/github/release/traefik/aloba.svg?style=flat)](https://github.com/traefik/aloba/releases/latest)
+[![Build Status](https://travis-ci.com/traefik/aloba.svg?branch=master)](https://travis-ci.com/traefik/aloba)
+[![Docker Build Status](https://img.shields.io/docker/build/traefik/aloba.svg)](https://hub.docker.com/r/traefik/aloba/builds/)
 
 ## Overview
 
@@ -47,7 +47,7 @@ workflow "Aloba: Issues" {
 }
 
 action "issue-labels" {
-  uses = "docker://containous/aloba"
+  uses = "docker://traefik/aloba"
   secrets = ["GITHUB_TOKEN"]
   args = "action --dry-run=false"
 }
@@ -58,7 +58,7 @@ workflow "Aloba: Pull Requests" {
 }
 
 action "pull-request-labels" {
-  uses = "docker://containous/aloba"
+  uses = "docker://traefik/aloba"
   secrets = ["GITHUB_TOKEN"]
   args = "action --dry-run=false"
 }
@@ -92,7 +92,7 @@ Flags:
 #### Examples:
 
 ```shell
-aloba label -o containous -r traefik --web-hook --github.token="xxxxxxxxxx"
+aloba label -o traefik -r traefik --web-hook --github.token="xxxxxxxxxx"
 ```
 
 ### Rules
@@ -150,7 +150,7 @@ Flags:
 ### Examples:
 
 ```shell
-aloba report -o containous -r traefik --github.token="xxxxxxxxxx" --slack.token="xxxxxxxxxx" --slack.channel=C0CDT22PJ
+aloba report -o traefik -r traefik --github.token="xxxxxxxxxx" --slack.token="xxxxxxxxxx" --slack.channel=C0CDT22PJ
 ```
 
 ## What does Myrmica Aloba mean?

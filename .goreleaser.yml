@@ -3,7 +3,7 @@ project_name: aloba
 builds:
   - binary: aloba
     ldflags:
-      - -s -w -X github.com/containous/aloba/meta.version={{.Version}} -X github.com/containous/aloba/meta.commit={{.Commit}} -X github.com/containous/aloba/meta.date={{.Date}}
+      - -s -w -X github.com/traefik/aloba/meta.version={{.Version}} -X github.com/traefik/aloba/meta.commit={{.Commit}} -X github.com/traefik/aloba/meta.date={{.Date}}
 
     goos:
       - windows
