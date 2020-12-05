@@ -33,11 +33,16 @@
     "scopelint",
     "gomnd",
     "wsl",
-    "goerr113",
-    "testpackage",
-    "godox",
-    "noctx",
     "nlreturn",
+    "godox",
+    "testpackage",
+    "paralleltest",
+    "tparallel",
+    "goerr113",
+    "wrapcheck",
+    "exhaustive",
+    "exhaustivestruct",
+    "noctx",
   ]
 
 [issues]
@@ -52,15 +57,15 @@
     linters = ["goconst", "funlen"]
   [[issues.exclude-rules]]
     path = "meta/version.go"
-    text = "`(version|commit|date)` is a global variable"
+    text = "(version|commit|date) is a global variable"
 
   [[issues.exclude-rules]]
     path = "report/report.go"
-    text = "`loginMap` is a global variable"
+    text = "loginMap is a global variable"
 
   [[issues.exclude-rules]]
     path = "milestone/milestone.go"
-    text = "`expMilestone` is a global variable"
+    text = "expMilestone is a global variable"
 
   [[issues.exclude-rules]]
     path = "cmd/label_webhook.go"

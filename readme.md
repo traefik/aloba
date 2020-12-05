@@ -1,7 +1,7 @@
 # Myrmica Aloba: Add labels and milestone on pull requests and issues.
 
 [![Release](https://img.shields.io/github/release/traefik/aloba.svg?style=flat)](https://github.com/traefik/aloba/releases/latest)
-[![Build Status](https://travis-ci.com/traefik/aloba.svg?branch=master)](https://travis-ci.com/traefik/aloba)
+[![Build Status](https://github.com/traefik/aloba/workflows/Main/badge.svg?branch=master)](https://github.com/traefik/aloba/actions)
 [![Docker Build Status](https://img.shields.io/docker/build/traefik/aloba.svg)](https://hub.docker.com/r/traefik/aloba/builds/)
 
 ## Overview

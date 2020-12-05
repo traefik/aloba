@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -41,7 +42,7 @@ func main() {
 
 	// Run command
 	err := flag.Run()
-	if err != nil && err != pflag.ErrHelp {
+	if err != nil && !errors.Is(err, pflag.ErrHelp) {
 		log.Fatalf("Error: %v\n", err)
 	}
 }
