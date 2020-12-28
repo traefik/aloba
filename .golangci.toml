@@ -43,6 +43,8 @@
     "exhaustive",
     "exhaustivestruct",
     "noctx",
+    "makezero",
+    "forbidigo",
   ]
 
 [issues]
