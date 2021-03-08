@@ -2,7 +2,7 @@
 
 [![Release](https://img.shields.io/github/release/traefik/aloba.svg?style=flat)](https://github.com/traefik/aloba/releases/latest)
 [![Build Status](https://github.com/traefik/aloba/workflows/Main/badge.svg?branch=master)](https://github.com/traefik/aloba/actions)
-[![Docker Build Status](https://img.shields.io/docker/build/traefik/aloba.svg)](https://hub.docker.com/r/traefik/aloba/builds/)
+[![Docker Image Version (latest semver)](https://img.shields.io/docker/v/traefik/aloba?label=Docker%20Image)](https://hub.docker.com/r/traefik/aloba/builds/)
 
 ## Overview
 
@@ -152,6 +152,16 @@ Flags:
 ```shell
 aloba report -o traefik -r traefik --github.token="xxxxxxxxxx" --slack.token="xxxxxxxxxx" --slack.channel=C0CDT22PJ
 ```
+
+## The Mymirca colony
+
+- [Myrmica Lobicornis](https://github.com/traefik/lobicornis) 🐜: Update and merge pull requests.
+- [Myrmica Aloba](https://github.com/traefik/aloba) 🐜: Add labels and milestone on pull requests and issues.
+- [Messor Structor](https://github.com/traefik/structor) 🐜: Manage multiple documentation versions with Mkdocs.
+- [Lasius Mixtus](https://github.com/traefik/mixtus) 🐜: Publish documentation to a GitHub repository from another.
+- [Myrmica Bibikoffi](https://github.com/traefik/bibikoffi) 🐜: Closes stale issues
+- [Chalepoxenus Kutteri](https://github.com/traefik/kutteri) 🐜: Track a GitHub repository and publish on Slack.
+- [Myrmica Gallienii](https://github.com/traefik/gallienii) 🐜: Keep Forks Synchronized
 
 ## What does Myrmica Aloba mean?
 
