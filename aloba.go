@@ -4,13 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/containous/flaeg"
 	"github.com/ogier/pflag"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/traefik/aloba/cmd"
-	"github.com/traefik/aloba/logger"
 	"github.com/traefik/aloba/meta"
 	"github.com/traefik/aloba/options"
 )
@@ -92,15 +92,11 @@ func createReportCommand() *flaeg.Command {
 		DefaultPointersConfig: &options.Report{Slack: &options.Slack{}, GitHub: &options.GitHub{}},
 	}
 	reportCmd.Run = func() error {
-		if reportOptions.DryRun {
-			log.Print("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
-		}
+		setupLogger(reportOptions.DryRun, reportOptions.LogLevel)
 
-		logLevel := reportOptions.LogLevel
 		if reportOptions.DryRun {
-			logLevel = zerolog.DebugLevel.String()
+			log.Info().Msg("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
 		}
-		logger.Setup(logLevel)
 
 		if len(reportOptions.GitHub.Token) == 0 {
 			reportOptions.GitHub.Token = os.Getenv("GITHUB_TOKEN")
@@ -142,13 +138,11 @@ func createLabelCommand() *flaeg.Command {
 	}
 
 	labelCmd.Run = func() error {
-		logLevel := labelOptions.LogLevel
+		setupLogger(labelOptions.DryRun, labelOptions.LogLevel)
+
 		if labelOptions.DryRun {
-			logLevel = zerolog.DebugLevel.String()
 			log.Info().Msg("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
 		}
-
-		logger.Setup(logLevel)
 
 		if len(labelOptions.GitHub.Token) == 0 {
 			labelOptions.GitHub.Token = os.Getenv("GITHUB_TOKEN")
@@ -182,13 +176,11 @@ func createGitHubActionCommand() *flaeg.Command {
 	}
 
 	ghaCmd.Run = func() error {
-		logLevel := ghaOptions.LogLevel
+		setupLogger(ghaOptions.DryRun, ghaOptions.LogLevel)
+
 		if ghaOptions.DryRun {
-			logLevel = zerolog.DebugLevel.String()
 			log.Info().Msg("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
 		}
-
-		logger.Setup(logLevel)
 
 		ghToken := os.Getenv("GITHUB_TOKEN")
 		err := required(ghToken, "GITHUB_TOKEN")
@@ -250,4 +242,24 @@ func validateLabelOptions(labelOptions *options.Label) error {
 		return err
 	}
 	return required(labelOptions.RulesFilePath, "rules-path")
+}
+
+// setupLogger is configuring the logger.
+func setupLogger(dryRun bool, level string) {
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+
+	log.Logger = zerolog.New(os.Stderr).With().Caller().Logger()
+
+	logLevel := zerolog.DebugLevel
+	if !dryRun {
+		var err error
+		logLevel, err = zerolog.ParseLevel(strings.ToLower(level))
+		if err != nil {
+			logLevel = zerolog.InfoLevel
+		}
+	}
+
+	zerolog.SetGlobalLevel(logLevel)
+
+	log.Trace().Msgf("Log level set to %s.", logLevel)
 }

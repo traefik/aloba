@@ -2,10 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 
+	"github.com/rs/zerolog/log"
 	"github.com/traefik/aloba/options"
 )
 
@@ -19,7 +19,7 @@ func (s *server) ListenAndServe() error {
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		log.Printf("Invalid http method: %s", r.Method)
+		log.Error().Msgf("Invalid http method: %s", r.Method)
 		http.Error(w, "405 Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
@@ -31,7 +31,7 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.options.Slack.ChannelID = channel[0]
 	}
 	if len(s.options.Slack.ChannelID) == 0 {
-		log.Printf("Slack channel is mandatory.")
+		log.Error().Msg("Slack channel is mandatory.")
 		http.Error(w, "Slack channel is mandatory.", http.StatusBadRequest)
 		return
 	}
@@ -41,10 +41,10 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.options.Slack.ChannelID = ChannelIDOld
 	}
 	if err != nil {
-		log.Printf("Report error: %v", err)
+		log.Error().Err(err).Msg("Report error.")
 		http.Error(w, "Report error.", http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Fprint(w, "Scheluded.")
+	_, _ = fmt.Fprint(w, "Scheluded.")
 }

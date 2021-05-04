@@ -3,12 +3,12 @@ package milestone
 import (
 	"context"
 	"fmt"
-	"log"
 	"regexp"
 	"sort"
 	"strconv"
 
 	"github.com/google/go-github/v27/github"
+	"github.com/rs/zerolog/log"
 )
 
 // MetaMilestone represent a milestone.
@@ -61,7 +61,7 @@ func makeMetas(stones []*github.Milestone) []*MetaMilestone {
 	for _, ml := range stones {
 		weight, errWeight := weightCalculator(ml)
 		if errWeight != nil {
-			log.Println(errWeight)
+			log.Error().Err(errWeight).Msg("Failed to compute weight.")
 			continue
 		}
 		meta := &MetaMilestone{

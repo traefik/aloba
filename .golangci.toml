@@ -48,6 +48,8 @@
     "exhaustivestruct",
     "noctx",
     "ifshort",
+    "makezero",
+    "forbidigo",
   ]
 
 [issues]

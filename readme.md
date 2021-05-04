@@ -17,7 +17,7 @@ Available Commands:
 - on new issue: adds the label `status/0-needs-triage`
 - on new pull request:
     - adds the label `status/0-needs-triage`
-    - adds labels based on [rules](#rules).
+    - add labels based on [rules](#rules).
     - adds a milestone (if a milestone matches the based branch of the PR).
     - adds a label related to the size of the pull request.
 
