@@ -28,12 +28,10 @@ func launch(options *options.Report) error {
 		return err
 	}
 
-	if options.Debug || options.DryRun {
-		report.DisplayReport(model)
-	}
-
 	if options.DryRun {
+		report.DisplayReport(model)
 		return nil
 	}
+
 	return report.SendToSlack(options.Slack, model)
 }

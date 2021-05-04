@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -13,15 +12,14 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/google/go-github/v27/github"
 	"github.com/ldez/ghwebhook/v2/eventtype"
+	"github.com/rs/zerolog/log"
 	"github.com/traefik/aloba/internal/gh"
 	"github.com/traefik/aloba/options"
 )
 
 // RunGitHubAction Performs the GitHub Action.
 func RunGitHubAction(options *options.GitHubAction, gitHubToken string) error {
-	if options.Debug {
-		log.Println(options)
-	}
+	log.Debug().Msgf("%v", options)
 
 	ctx := context.Background()
 	client := gh.NewGitHubClient(ctx, gitHubToken)
@@ -65,7 +63,7 @@ func RunGitHubAction(options *options.GitHubAction, gitHubToken string) error {
 		}
 
 		if options.DryRun {
-			log.Printf("Rules: %+v\n", meta)
+			log.Debug().Msgf("Rules: %+v", meta)
 		}
 
 		if event.GetAction() == stateOpened {
