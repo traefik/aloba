@@ -24,7 +24,7 @@ type RulesConfiguration struct {
 
 // Label adds labels to Pull Request.
 func Label(options *options.Label) error {
-	log.Debug().Msgf("%v", options)
+	log.Debug().Msgf("options: %#v", options)
 
 	ctx := context.Background()
 	client := gh.NewGitHubClient(ctx, options.GitHub.Token)
