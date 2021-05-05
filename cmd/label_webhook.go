@@ -2,13 +2,13 @@ package cmd
 
 import (
 	"context"
-	"log"
 	"net/url"
 	"strings"
 
 	"github.com/google/go-github/v27/github"
 	ghw "github.com/ldez/ghwebhook/v2"
 	"github.com/ldez/ghwebhook/v2/eventtype"
+	"github.com/rs/zerolog/log"
 	"github.com/traefik/aloba/internal/gh"
 	"github.com/traefik/aloba/label"
 	"github.com/traefik/aloba/options"
@@ -34,7 +34,7 @@ func (l *Labeler) onIssue(ctx context.Context) func(*url.URL, *github.WebHookPay
 			go func(event *github.IssuesEvent) {
 				err := l.onIssueOpened(ctx, event)
 				if err != nil {
-					log.Println(err)
+					log.Error().Int("issue", event.Issue.GetNumber()).Err(err).Msg("error")
 				}
 			}(event)
 		}
@@ -47,7 +47,7 @@ func (l *Labeler) onPullRequest(ctx context.Context, rc *RulesConfiguration) fun
 			go func(event *github.PullRequestEvent) {
 				err := l.onPullRequestOpened(ctx, event, rc)
 				if err != nil {
-					log.Println(err)
+					log.Error().Int("pr", event.PullRequest.GetNumber()).Err(err).Msg("error")
 				}
 			}(event)
 		}
@@ -61,7 +61,7 @@ func (l *Labeler) onPullRequestReview(ctx context.Context) func(*url.URL, *githu
 				go func(event *github.PullRequestReviewEvent) {
 					issue, _, err := l.client.Issues.Get(ctx, l.owner, l.repoName, event.PullRequest.GetNumber())
 					if err != nil {
-						log.Printf("failed to get PR %d: %v", event.PullRequest.GetNumber(), err)
+						log.Error().Int("pr", event.PullRequest.GetNumber()).Err(err).Msg("Failed to get PR.")
 						return
 					}
 
@@ -70,11 +70,11 @@ func (l *Labeler) onPullRequestReview(ctx context.Context) func(*url.URL, *githu
 					}
 
 					if l.DryRun {
-						log.Printf("#%d: Add %s\n", issue.GetNumber(), label.ContributorWaitingForCorrections)
+						log.Debug().Int("pr", issue.GetNumber()).Msgf("Add %s", label.ContributorWaitingForCorrections)
 					} else {
 						_, _, err = l.client.Issues.AddLabelsToIssue(ctx, l.owner, l.repoName, issue.GetNumber(), []string{label.ContributorWaitingForCorrections})
 						if err != nil {
-							log.Printf("failed to add label on PR %d: %v", event.PullRequest.GetNumber(), err)
+							log.Error().Err(err).Int("pr", event.PullRequest.GetNumber()).Msg("Failed to add label on PR.")
 							return
 						}
 					}
@@ -86,13 +86,13 @@ func (l *Labeler) onPullRequestReview(ctx context.Context) func(*url.URL, *githu
 				go func(event *github.PullRequestReviewEvent) {
 					issue, _, err := l.client.Issues.Get(ctx, l.owner, l.repoName, event.PullRequest.GetNumber())
 					if err != nil {
-						log.Printf("failed to get PR %d: %v", event.PullRequest.GetNumber(), err)
+						log.Error().Int("pr", event.PullRequest.GetNumber()).Err(err).Msg("Failed to get PR.")
 						return
 					}
 
 					err = l.removeLabel(ctx, issue, label.ContributorWaitingForCorrections)
 					if err != nil {
-						log.Printf("failed to remove label on PR %d: %v", event.PullRequest.GetNumber(), err)
+						log.Error().Int("pr", event.PullRequest.GetNumber()).Err(err).Msg("Failed to remove label on PR.")
 						return
 					}
 				}(event)
@@ -105,7 +105,7 @@ func (l *Labeler) onPullRequestReview(ctx context.Context) func(*url.URL, *githu
 func (l *Labeler) removeLabel(ctx context.Context, issue *github.Issue, labelName string) error {
 	if label.HasLabel(issue.Labels, labelName) {
 		if l.DryRun {
-			log.Printf("#%d: Remove %s\n", issue.GetNumber(), labelName)
+			log.Debug().Int("pr", issue.GetNumber()).Msgf("Remove %s", labelName)
 		} else {
 			_, err := l.client.Issues.RemoveLabelForIssue(ctx, l.owner, l.repoName, issue.GetNumber(), labelName)
 			if err != nil {

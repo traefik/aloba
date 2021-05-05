@@ -5,7 +5,7 @@ type Empty struct{}
 
 // Report options.
 type Report struct {
-	Debug      bool    `description:"Debug mode."`
+	LogLevel   string  `long:"log-level" description:"Log level."`
 	DryRun     bool    `long:"dry-run" description:"Dry run mode."`
 	ServerMode bool    `long:"server" description:"Server mode."`
 	ServerPort int     `long:"port" description:"Server port."`
@@ -30,7 +30,7 @@ type GitHub struct {
 
 // Label options.
 type Label struct {
-	Debug         bool     `description:"Debug mode."`
+	LogLevel      string   `long:"log-level" description:"Log level."`
 	DryRun        bool     `long:"dry-run" description:"Dry run mode."`
 	WebHook       *WebHook `long:"web-hook" description:"Run as WebHook."`
 	RulesFilePath string   `long:"rules-path" description:"Path to the rule file."`
@@ -39,8 +39,8 @@ type Label struct {
 
 // GitHubAction options.
 type GitHubAction struct {
-	Debug  bool `description:"Debug mode."`
-	DryRun bool `long:"dry-run" description:"Dry run mode."`
+	LogLevel string `long:"log-level" description:"Log level."`
+	DryRun   bool   `long:"dry-run" description:"Dry run mode."`
 }
 
 // WebHook options.

@@ -2,12 +2,12 @@ package report
 
 import (
 	"context"
-	"log"
 	"math"
 	"strings"
 	"time"
 
 	"github.com/google/go-github/v27/github"
+	"github.com/rs/zerolog/log"
 	"github.com/traefik/aloba/internal/search"
 	"github.com/traefik/aloba/label"
 )
@@ -28,7 +28,7 @@ type transformer func(ctx context.Context, members []*github.User, issue github.
 func (r *Reporter) makePRSummaries(ctx context.Context, members []*github.User, transform transformer, searchFilter ...search.Parameter) []prSummary {
 	issues, err := search.FindOpenPR(ctx, r.client, r.owner, r.repoName, searchFilter...)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err).Msg("Failed to find PR.")
 	}
 
 	var summaries []prSummary

@@ -3,11 +3,11 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/BurntSushi/toml"
 	"github.com/google/go-github/v27/github"
+	"github.com/rs/zerolog/log"
 	"github.com/traefik/aloba/internal/gh"
 	"github.com/traefik/aloba/label"
 	"github.com/traefik/aloba/milestone"
@@ -24,9 +24,7 @@ type RulesConfiguration struct {
 
 // Label adds labels to Pull Request.
 func Label(options *options.Label) error {
-	if options.Debug {
-		log.Println(options)
-	}
+	log.Debug().Msgf("%v", options)
 
 	ctx := context.Background()
 	client := gh.NewGitHubClient(ctx, options.GitHub.Token)
@@ -40,9 +38,7 @@ func Label(options *options.Label) error {
 		return fmt.Errorf("failed to read TOML file (%s): %w", options.RulesFilePath, err)
 	}
 
-	if options.Debug {
-		log.Printf("Rules: %+v\n", meta)
-	}
+	log.Debug().Msgf("Rules: %+v", meta)
 
 	if options.WebHook == nil {
 		return labeler.runStandalone(ctx, rc)
@@ -119,12 +115,12 @@ func (l *Labeler) addLabelsToPR(ctx context.Context, issue github.Issue, rc *Rul
 	}
 
 	if len(addedLabels) == 0 {
-		log.Printf("#%d: No new labels", issue.GetNumber())
+		log.Debug().Int("pr", issue.GetNumber()).Msg("No new labels")
 		return nil
 	}
 
 	if l.DryRun {
-		log.Printf("#%d: %v - %s\n", issue.GetNumber(), addedLabels, issue.GetTitle())
+		log.Debug().Int("pr", issue.GetNumber()).Msgf("%v - %s", addedLabels, issue.GetTitle())
 		return nil
 	}
 
@@ -168,7 +164,7 @@ func (l *Labeler) onIssueOpened(ctx context.Context, event *github.IssuesEvent) 
 
 	if len(issue.Labels) == 0 {
 		if l.DryRun {
-			log.Printf("Add %q label to %d", label.StatusNeedsTriage, event.Issue.GetNumber())
+			log.Debug().Int("issue", event.Issue.GetNumber()).Msgf("Add %q label.", label.StatusNeedsTriage)
 			return nil
 		}
 

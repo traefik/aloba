@@ -3,11 +3,13 @@ package main
 import (
 	"errors"
 	"fmt"
-	"log"
 	"os"
+	"strings"
 
 	"github.com/containous/flaeg"
 	"github.com/ogier/pflag"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/traefik/aloba/cmd"
 	"github.com/traefik/aloba/meta"
 	"github.com/traefik/aloba/options"
@@ -43,7 +45,7 @@ func main() {
 	// Run command
 	err := flag.Run()
 	if err != nil && !errors.Is(err, pflag.ErrHelp) {
-		log.Fatalf("Error: %v\n", err)
+		log.Fatal().Err(err).Msg("unable to start aloba")
 	}
 }
 
@@ -90,8 +92,10 @@ func createReportCommand() *flaeg.Command {
 		DefaultPointersConfig: &options.Report{Slack: &options.Slack{}, GitHub: &options.GitHub{}},
 	}
 	reportCmd.Run = func() error {
+		setupLogger(reportOptions.DryRun, reportOptions.LogLevel)
+
 		if reportOptions.DryRun {
-			log.Print("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
+			log.Info().Msg("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
 		}
 
 		if len(reportOptions.GitHub.Token) == 0 {
@@ -134,8 +138,10 @@ func createLabelCommand() *flaeg.Command {
 	}
 
 	labelCmd.Run = func() error {
+		setupLogger(labelOptions.DryRun, labelOptions.LogLevel)
+
 		if labelOptions.DryRun {
-			log.Print("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
+			log.Info().Msg("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
 		}
 
 		if len(labelOptions.GitHub.Token) == 0 {
@@ -158,20 +164,22 @@ func createLabelCommand() *flaeg.Command {
 }
 
 func createGitHubActionCommand() *flaeg.Command {
-	labelOptions := &options.GitHubAction{
+	ghaOptions := &options.GitHubAction{
 		DryRun: true,
 	}
 
-	labelCmd := &flaeg.Command{
+	ghaCmd := &flaeg.Command{
 		Name:                  "action",
 		Description:           "GitHub Action",
-		Config:                labelOptions,
+		Config:                ghaOptions,
 		DefaultPointersConfig: &options.GitHubAction{},
 	}
 
-	labelCmd.Run = func() error {
-		if labelOptions.DryRun {
-			log.Print("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
+	ghaCmd.Run = func() error {
+		setupLogger(ghaOptions.DryRun, ghaOptions.LogLevel)
+
+		if ghaOptions.DryRun {
+			log.Info().Msg("IMPORTANT: you are using the dry-run mode. Use `--dry-run=false` to disable this mode.")
 		}
 
 		ghToken := os.Getenv("GITHUB_TOKEN")
@@ -180,10 +188,10 @@ func createGitHubActionCommand() *flaeg.Command {
 			return err
 		}
 
-		return cmd.RunGitHubAction(labelOptions, ghToken)
+		return cmd.RunGitHubAction(ghaOptions, ghToken)
 	}
 
-	return labelCmd
+	return ghaCmd
 }
 
 func required(field, fieldName string) error {
@@ -234,4 +242,24 @@ func validateLabelOptions(labelOptions *options.Label) error {
 		return err
 	}
 	return required(labelOptions.RulesFilePath, "rules-path")
+}
+
+// setupLogger is configuring the logger.
+func setupLogger(dryRun bool, level string) {
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+
+	log.Logger = zerolog.New(os.Stderr).With().Caller().Logger()
+
+	logLevel := zerolog.DebugLevel
+	if !dryRun {
+		var err error
+		logLevel, err = zerolog.ParseLevel(strings.ToLower(level))
+		if err != nil {
+			logLevel = zerolog.InfoLevel
+		}
+	}
+
+	zerolog.SetGlobalLevel(logLevel)
+
+	log.Trace().Msgf("Log level set to %s.", logLevel)
 }

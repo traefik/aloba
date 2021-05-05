@@ -3,9 +3,9 @@ package report
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/google/go-github/v27/github"
+	"github.com/rs/zerolog/log"
 	"github.com/traefik/aloba/internal/gh"
 	"github.com/traefik/aloba/internal/search"
 	"github.com/traefik/aloba/label"
@@ -105,7 +105,7 @@ func (r *Reporter) Make(ctx context.Context) (*Model, error) {
 func (r *Reporter) makeWithReview(ctx context.Context, members []*github.User, issue github.Issue) prSummary {
 	approvedReviews, changesRequestedReviews, err := gh.GetReviewStatus(ctx, r.client, r.owner, r.repoName, members, issue.GetNumber())
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err).Msg("unable to retrieve reviews status")
 	}
 
 	var crb []string
@@ -133,20 +133,16 @@ func (r *Reporter) makeWithoutReview(_ context.Context, _ []*github.User, issue 
 // DisplayReport display a PRs report.
 func DisplayReport(rp *Model) {
 	if len(rp.withReviews) != 0 {
-		fmt.Println("With reviews:")
-		fmt.Println(makeMessage(rp.withReviews, true))
+		log.Info().Msgf("With reviews: %s", makeMessage(rp.withReviews, true))
 	}
 	if len(rp.noReviews) != 0 {
-		fmt.Println("No reviews:")
-		fmt.Println(makeMessage(rp.noReviews, true))
+		log.Info().Msgf("No reviews: %s", makeMessage(rp.noReviews, true))
 	}
 	if len(rp.contrib) != 0 {
-		fmt.Println("waiting-for-corrections:")
-		fmt.Println(makeMessage(rp.contrib, true))
+		log.Info().Msgf("waiting-for-corrections: %s", makeMessage(rp.contrib, true))
 	}
 	if len(rp.designReview) != 0 {
-		fmt.Println("Need design review:")
-		fmt.Println(makeMessage(rp.designReview, true))
+		log.Info().Msgf("Need design review: %s", makeMessage(rp.designReview, true))
 	}
 }
 
