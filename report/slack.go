@@ -3,7 +3,7 @@ package report
 import (
 	"strings"
 
-	"github.com/nlopes/slack"
+	"github.com/slack-go/slack"
 	"github.com/traefik/aloba/options"
 )
 
