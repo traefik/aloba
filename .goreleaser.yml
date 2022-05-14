@@ -13,15 +13,15 @@ builds:
       - openbsd
     goarch:
       - amd64
-      - 386
+      - '386'
       - arm
       - arm64
     goarm:
-      - 7
+      - '7'
 
     ignore:
       - goos: darwin
-        goarch: 386
+        goarch: '386'
       - goos: openbsd
         goarch: arm
 
@@ -35,11 +35,12 @@ changelog:
       - '^test:'
       - '^tests:'
 
-archive:
-  name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm}}v{{ .Arm }}{{ end }}'
-  format: tar.gz
-  format_overrides:
-    - goos: windows
-      format: zip
-  files:
-    - LICENSE
+archives:
+  - id: aloba
+    name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}'
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - LICENSE
