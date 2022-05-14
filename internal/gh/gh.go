@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v44/github"
 	"golang.org/x/oauth2"
 )
 
@@ -73,7 +73,7 @@ func GetTeamMembers(ctx context.Context, client *github.Client, owner, teamName 
 	orgTeamMemberOpts := &github.TeamListTeamMembersOptions{}
 	orgTeamMemberOpts.PerPage = 100
 
-	members, _, err := client.Teams.ListTeamMembers(ctx, team.GetID(), orgTeamMemberOpts)
+	members, _, err := client.Teams.ListTeamMembersBySlug(ctx, owner, team.GetSlug(), orgTeamMemberOpts)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get team %s on %s: %w", teamName, owner, err)
 	}

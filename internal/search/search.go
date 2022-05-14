@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v44/github"
 )
 
-type byCreated []github.Issue
+type byCreated []*github.Issue
 
 func (a byCreated) Len() int      { return len(a) }
 func (a byCreated) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
@@ -17,7 +17,7 @@ func (a byCreated) Less(i, j int) bool {
 }
 
 // FindOpenPR search and find open Pull Requests.
-func FindOpenPR(ctx context.Context, client *github.Client, owner, repositoryName string, parameters ...Parameter) ([]github.Issue, error) {
+func FindOpenPR(ctx context.Context, client *github.Client, owner, repositoryName string, parameters ...Parameter) ([]*github.Issue, error) {
 	query := createQuery(owner, repositoryName, parameters)
 
 	searchOptions := &github.SearchOptions{
@@ -26,7 +26,7 @@ func FindOpenPR(ctx context.Context, client *github.Client, owner, repositoryNam
 		ListOptions: github.ListOptions{PerPage: 100},
 	}
 
-	var issues []github.Issue
+	var issues []*github.Issue
 	for {
 		issuesSearchResult, resp, err := client.Search.Issues(ctx, query, searchOptions)
 		if err != nil {

@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v44/github"
 	"github.com/rs/zerolog/log"
 )
 

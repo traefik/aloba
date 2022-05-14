@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v44/github"
 	"github.com/rs/zerolog/log"
 	"github.com/traefik/aloba/internal/gh"
 	"github.com/traefik/aloba/label"
@@ -82,7 +82,7 @@ func (l *Labeler) addMilestoneToPR(ctx context.Context, pr *github.PullRequest) 
 	return nil
 }
 
-func (l *Labeler) addLabelsToPR(ctx context.Context, issue github.Issue, rc *RulesConfiguration) error {
+func (l *Labeler) addLabelsToPR(ctx context.Context, issue *github.Issue, rc *RulesConfiguration) error {
 	var labels []string
 
 	// AREA
@@ -132,7 +132,7 @@ func (l *Labeler) addLabelsToPR(ctx context.Context, issue github.Issue, rc *Rul
 	return nil
 }
 
-func (l *Labeler) getSizeLabel(ctx context.Context, issue github.Issue, limits label.Limits) (string, error) {
+func (l *Labeler) getSizeLabel(ctx context.Context, issue *github.Issue, limits label.Limits) (string, error) {
 	size, err := label.GetSizeLabel(ctx, l.client, l.owner, l.repoName, issue.GetNumber(), limits)
 	if err != nil {
 		return "", err
@@ -186,7 +186,7 @@ func (l *Labeler) onPullRequestOpened(ctx context.Context, event *github.PullReq
 		return fmt.Errorf("failed to get PR %d: %w", event.GetNumber(), err)
 	}
 
-	err = l.addLabelsToPR(ctx, *issue, rc)
+	err = l.addLabelsToPR(ctx, issue, rc)
 	if err != nil {
 		return fmt.Errorf("failed to add labels on PR %d: %w", issue.GetNumber(), err)
 	}

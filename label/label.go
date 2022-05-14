@@ -3,7 +3,7 @@ package label
 import (
 	"strings"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v44/github"
 )
 
 // status labels.
@@ -34,7 +34,7 @@ const (
 )
 
 // HasStatus check if issue labels contains a status label.
-func HasStatus(issueLabels []github.Label) bool {
+func HasStatus(issueLabels []*github.Label) bool {
 	for _, lbl := range issueLabels {
 		if strings.HasPrefix(lbl.GetName(), StatusPrefix) || strings.HasSuffix(lbl.GetName(), WIP) {
 			return true
@@ -44,7 +44,7 @@ func HasStatus(issueLabels []github.Label) bool {
 }
 
 // HasLabel check if issue labels  contains a specific label.
-func HasLabel(issueLabels []github.Label, label string) bool {
+func HasLabel(issueLabels []*github.Label, label string) bool {
 	for _, lbl := range issueLabels {
 		if lbl.GetName() == label {
 			return true

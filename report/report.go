@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v44/github"
 	"github.com/rs/zerolog/log"
 	"github.com/traefik/aloba/internal/gh"
 	"github.com/traefik/aloba/internal/search"
@@ -102,7 +102,7 @@ func (r *Reporter) Make(ctx context.Context) (*Model, error) {
 	return rp, nil
 }
 
-func (r *Reporter) makeWithReview(ctx context.Context, members []*github.User, issue github.Issue) prSummary {
+func (r *Reporter) makeWithReview(ctx context.Context, members []*github.User, issue *github.Issue) prSummary {
 	approvedReviews, changesRequestedReviews, err := gh.GetReviewStatus(ctx, r.client, r.owner, r.repoName, members, issue.GetNumber())
 	if err != nil {
 		log.Fatal().Err(err).Msg("unable to retrieve reviews status")
@@ -126,7 +126,7 @@ func (r *Reporter) makeWithReview(ctx context.Context, members []*github.User, i
 	return newPRSummary(issue, ar, crb)
 }
 
-func (r *Reporter) makeWithoutReview(_ context.Context, _ []*github.User, issue github.Issue) prSummary {
+func (r *Reporter) makeWithoutReview(_ context.Context, _ []*github.User, issue *github.Issue) prSummary {
 	return newPRSummary(issue, nil, nil)
 }
 

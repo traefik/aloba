@@ -5,9 +5,9 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/google/go-github/v27/github"
-	ghw "github.com/ldez/ghwebhook/v2"
-	"github.com/ldez/ghwebhook/v2/eventtype"
+	"github.com/google/go-github/v44/github"
+	ghw "github.com/ldez/ghwebhook/v3"
+	"github.com/ldez/ghwebhook/v3/eventtype"
 	"github.com/rs/zerolog/log"
 	"github.com/traefik/aloba/internal/gh"
 	"github.com/traefik/aloba/label"
@@ -28,8 +28,8 @@ func (l *Labeler) runWebHook(ctx context.Context, rc *RulesConfiguration, opts *
 	return hook.ListenAndServe()
 }
 
-func (l *Labeler) onIssue(ctx context.Context) func(*url.URL, *github.WebHookPayload, *github.IssuesEvent) {
-	return func(_ *url.URL, _ *github.WebHookPayload, event *github.IssuesEvent) {
+func (l *Labeler) onIssue(ctx context.Context) func(*url.URL, *github.IssuesEvent) {
+	return func(_ *url.URL, event *github.IssuesEvent) {
 		if event.GetAction() == stateOpened {
 			go func(event *github.IssuesEvent) {
 				err := l.onIssueOpened(ctx, event)
@@ -41,8 +41,8 @@ func (l *Labeler) onIssue(ctx context.Context) func(*url.URL, *github.WebHookPay
 	}
 }
 
-func (l *Labeler) onPullRequest(ctx context.Context, rc *RulesConfiguration) func(*url.URL, *github.WebHookPayload, *github.PullRequestEvent) {
-	return func(_ *url.URL, _ *github.WebHookPayload, event *github.PullRequestEvent) {
+func (l *Labeler) onPullRequest(ctx context.Context, rc *RulesConfiguration) func(*url.URL, *github.PullRequestEvent) {
+	return func(_ *url.URL, event *github.PullRequestEvent) {
 		if event.GetAction() == stateOpened {
 			go func(event *github.PullRequestEvent) {
 				err := l.onPullRequestOpened(ctx, event, rc)
@@ -54,8 +54,8 @@ func (l *Labeler) onPullRequest(ctx context.Context, rc *RulesConfiguration) fun
 	}
 }
 
-func (l *Labeler) onPullRequestReview(ctx context.Context) func(*url.URL, *github.WebHookPayload, *github.PullRequestReviewEvent) {
-	return func(_ *url.URL, _ *github.WebHookPayload, event *github.PullRequestReviewEvent) {
+func (l *Labeler) onPullRequestReview(ctx context.Context) func(*url.URL, *github.PullRequestReviewEvent) {
+	return func(_ *url.URL, event *github.PullRequestReviewEvent) {
 		if event.GetAction() == "submitted" {
 			if strings.EqualFold(event.Review.GetState(), gh.ChangesRequested) {
 				go func(event *github.PullRequestReviewEvent) {

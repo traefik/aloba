@@ -1,0 +1,69 @@
+run:
+  deadline: 2m
+  skip-files:
+    - ^unsecured/
+
+linters-settings:
+  govet:
+    check-shadowing: true
+  gocyclo:
+    min-complexity: 16
+  maligned:
+    suggest-new: true
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+  misspell:
+    locale: US
+
+linters:
+  enable-all: true
+  disable:
+    - maligned # deprecated
+    - interfacer # deprecated
+    - scopelint # deprecated
+    - golint # deprecated
+    - cyclop
+    - lll
+    - gas
+    - dupl
+    - prealloc
+    - scopelint
+    - gomnd
+    - wsl
+    - nlreturn
+    - gocognit
+    - nestif
+    - testpackage
+    - paralleltest
+    - tparallel
+    - goerr113
+    - wrapcheck
+    - exhaustive
+    - exhaustivestruct
+    - exhaustruct
+    - noctx
+    - ifshort
+    - makezero
+    - forbidigo
+    - varnamelen
+    - nilnil
+
+issues:
+  exclude-use-default: false
+  max-per-linter: 0
+  max-same-issues: 0
+  exclude:
+    - 'ST1000: at least one file in a package should have a package comment'
+  exclude-rules:
+    - path: (.+)_test.go
+      linters:
+        - funlen
+    - path: meta/version.go
+      text: (version|date|commit) is a global variable
+    - path: meta/version.go
+      text: use of `fmt.Printf` forbidden by pattern
+    - path: report/report.go
+      text: loginMap is a global variable
+    - path: report/slack.go
+      text: 'Line contains TODO/BUG/FIXME: '

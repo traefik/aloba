@@ -3,11 +3,11 @@ package label
 import (
 	"testing"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v44/github"
 )
 
 func TestHasLabel(t *testing.T) {
-	basicLabels := []github.Label{
+	basicLabels := []*github.Label{
 		{
 			Name: github.String("foo"),
 		},
@@ -24,7 +24,7 @@ func TestHasLabel(t *testing.T) {
 
 	testCases := []struct {
 		name           string
-		labels         []github.Label
+		labels         []*github.Label
 		label          string
 		expectedResult bool
 	}{
@@ -42,7 +42,7 @@ func TestHasLabel(t *testing.T) {
 		},
 		{
 			name:           "empty labels",
-			labels:         []github.Label{},
+			labels:         []*github.Label{},
 			label:          "fuu",
 			expectedResult: false,
 		},
@@ -71,12 +71,12 @@ func TestHasLabel(t *testing.T) {
 func TestHasStatus(t *testing.T) {
 	testsCases := []struct {
 		name           string
-		labels         []github.Label
+		labels         []*github.Label
 		expectedResult bool
 	}{
 		{
 			name: "with status label",
-			labels: []github.Label{
+			labels: []*github.Label{
 				{
 					Name: github.String("foo"),
 				},
@@ -91,7 +91,7 @@ func TestHasStatus(t *testing.T) {
 		},
 		{
 			name: "without status label",
-			labels: []github.Label{
+			labels: []*github.Label{
 				{
 					Name: github.String("foo"),
 				},
@@ -106,7 +106,7 @@ func TestHasStatus(t *testing.T) {
 		},
 		{
 			name: "with WIP label",
-			labels: []github.Label{
+			labels: []*github.Label{
 				{
 					Name: github.String("foo"),
 				},

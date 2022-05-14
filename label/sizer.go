@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v44/github"
 )
 
 // Limits a set of Pull request limits by size.
@@ -30,7 +30,7 @@ type Changes struct {
 }
 
 // GetCurrentSize gets the size of a Pull Request.
-func GetCurrentSize(issueLabels []github.Label) string {
+func GetCurrentSize(issueLabels []*github.Label) string {
 	for _, lbl := range issueLabels {
 		if strings.HasPrefix(lbl.GetName(), SizeLabelPrefix) {
 			return lbl.GetName()

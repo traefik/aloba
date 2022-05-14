@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v44/github"
 	"github.com/rs/zerolog/log"
 	"github.com/traefik/aloba/internal/search"
 	"github.com/traefik/aloba/label"
@@ -23,7 +23,7 @@ type prSummary struct {
 	Milestone           string
 }
 
-type transformer func(ctx context.Context, members []*github.User, issue github.Issue) prSummary
+type transformer func(ctx context.Context, members []*github.User, issue *github.Issue) prSummary
 
 func (r *Reporter) makePRSummaries(ctx context.Context, members []*github.User, transform transformer, searchFilter ...search.Parameter) []prSummary {
 	issues, err := search.FindOpenPR(ctx, r.client, r.owner, r.repoName, searchFilter...)
@@ -34,6 +34,10 @@ func (r *Reporter) makePRSummaries(ctx context.Context, members []*github.User, 
 	var summaries []prSummary
 
 	for _, issue := range issues {
+		if issue == nil {
+			continue
+		}
+
 		summary := transform(ctx, members, issue)
 		summaries = append(summaries, summary)
 	}
@@ -41,7 +45,7 @@ func (r *Reporter) makePRSummaries(ctx context.Context, members []*github.User, 
 	return summaries
 }
 
-func newPRSummary(issue github.Issue, approved, requestChanges []string) prSummary {
+func newPRSummary(issue *github.Issue, approved, requestChanges []string) prSummary {
 	var areas []string
 	var size string
 	for _, lbl := range issue.Labels {
