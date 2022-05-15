@@ -11,7 +11,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/google/go-github/v44/github"
-	"github.com/ldez/ghwebhook/v3/eventtype"
+	"github.com/ldez/ghwebhook/v4/eventtype"
 	"github.com/rs/zerolog/log"
 	"github.com/traefik/aloba/internal/gh"
 	"github.com/traefik/aloba/options"

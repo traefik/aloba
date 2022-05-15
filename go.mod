@@ -6,7 +6,7 @@ require (
 	github.com/BurntSushi/toml v0.4.1
 	github.com/containous/flaeg v1.4.1
 	github.com/google/go-github/v44 v44.1.0
-	github.com/ldez/ghwebhook/v3 v3.0.0
+	github.com/ldez/ghwebhook/v4 v4.0.0
 	github.com/ogier/pflag v0.0.0-20160129220114-45c278ab3607
 	github.com/rs/zerolog v1.23.0
 	github.com/slack-go/slack v0.9.4

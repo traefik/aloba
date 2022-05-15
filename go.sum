@@ -121,8 +121,8 @@ github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+o
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
-github.com/ldez/ghwebhook/v3 v3.0.0 h1:NCptarU6xKIykR9d4dUbnjdzxTOvYNSNuyYA5hAn6Cc=
-github.com/ldez/ghwebhook/v3 v3.0.0/go.mod h1:6EE/9jH2wgmdyvysne5m+jKPAPs1iN9JSdT8LURlwpQ=
+github.com/ldez/ghwebhook/v4 v4.0.0 h1:Cvb91xERwfGYdfGknQyiA5OiO1OkJaLYW4xVeGRg5kE=
+github.com/ldez/ghwebhook/v4 v4.0.0/go.mod h1:0P+XIjR9Q505wgb/x7iIeFmQ3NlGX+vrJEi8IEoOYYc=
 github.com/ogier/pflag v0.0.0-20160129220114-45c278ab3607 h1:db+rES1EpSjP45xOU3hgS41oawQiZzqfnl6dUgBdFjY=
 github.com/ogier/pflag v0.0.0-20160129220114-45c278ab3607/go.mod h1:zkFki7tvTa0tafRvTBIZTvzYyAu6kQhPZFnshFFPE+g=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
