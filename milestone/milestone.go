@@ -38,7 +38,7 @@ var expMilestone = regexp.MustCompile(`(\d+)\.(\d+)(?:\.(\d+))?`)
 func Detect(ctx context.Context, client *github.Client, owner, repoName string, pr *github.PullRequest) (*MetaMilestone, error) {
 	opt := &github.MilestoneListOptions{}
 	opt.State = "all"
-	opt.PerPage = 10
+	opt.Direction = "desc"
 
 	stones, _, err := client.Issues.ListMilestones(ctx, owner, repoName, opt)
 	if err != nil {
