@@ -11,7 +11,7 @@ var (
 	date    = "I don't remember exactly"
 )
 
-// DisplayVersion DisplayVersion version.
+// DisplayVersion Displays the version.
 func DisplayVersion() {
 	fmt.Printf(`Myrmica Aloba:
  version     : %s

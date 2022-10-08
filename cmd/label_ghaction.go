@@ -4,13 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/BurntSushi/toml"
-	"github.com/google/go-github/v44/github"
+	"github.com/google/go-github/v47/github"
 	"github.com/ldez/ghwebhook/v4/eventtype"
 	"github.com/rs/zerolog/log"
 	"github.com/traefik/aloba/internal/gh"
@@ -78,7 +77,7 @@ func RunGitHubAction(options *options.GitHubAction, gitHubToken string) error {
 }
 
 func readEvent(eventPath string, event interface{}) error {
-	content, err := ioutil.ReadFile(eventPath)
+	content, err := os.ReadFile(eventPath)
 	if err != nil {
 		return fmt.Errorf("failed to read file %s: %w", eventPath, err)
 	}

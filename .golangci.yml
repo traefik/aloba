@@ -19,11 +19,21 @@ linters-settings:
 linters:
   enable-all: true
   disable:
-    - maligned # deprecated
-    - interfacer # deprecated
-    - scopelint # deprecated
+    - deadcode # deprecated
+    - exhaustivestruct # deprecated
     - golint # deprecated
-    - cyclop
+    - ifshort # deprecated
+    - interfacer # deprecated
+    - maligned # deprecated
+    - nosnakecase # deprecated
+    - scopelint # deprecated
+    - scopelint # deprecated
+    - structcheck # deprecated
+    - varcheck # deprecated
+    - sqlclosecheck # not relevant (SQL)
+    - rowserrcheck # not relevant (SQL)
+    - execinquery # not relevant (SQL)
+    - cyclop # duplicate of gocyclo
     - lll
     - gas
     - dupl
@@ -40,14 +50,13 @@ linters:
     - goerr113
     - wrapcheck
     - exhaustive
-    - exhaustivestruct
     - exhaustruct
     - noctx
-    - ifshort
     - makezero
     - forbidigo
     - varnamelen
     - nilnil
+    - contextcheck
 
 issues:
   exclude-use-default: false
@@ -55,6 +64,7 @@ issues:
   max-same-issues: 0
   exclude:
     - 'ST1000: at least one file in a package should have a package comment'
+    - 'package-comments: should have a package comment'
   exclude-rules:
     - path: (.+)_test.go
       linters:

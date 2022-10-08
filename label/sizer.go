@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/google/go-github/v44/github"
+	"github.com/google/go-github/v47/github"
 )
 
 // Limits a set of Pull request limits by size.

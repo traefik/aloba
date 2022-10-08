@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/google/go-github/v44/github"
+	"github.com/google/go-github/v47/github"
 )
 
 // Rule Area rule.

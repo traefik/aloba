@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/google/go-github/v44/github"
+	"github.com/google/go-github/v47/github"
 	"github.com/rs/zerolog/log"
 	"github.com/traefik/aloba/internal/gh"
 	"github.com/traefik/aloba/internal/search"

@@ -3,7 +3,7 @@ package label
 import (
 	"strings"
 
-	"github.com/google/go-github/v44/github"
+	"github.com/google/go-github/v47/github"
 )
 
 // status labels.
