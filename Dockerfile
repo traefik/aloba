@@ -1,8 +1,7 @@
 FROM golang:1-alpine as builder
 
-RUN apk --update upgrade \
-&& apk --no-cache --no-progress add git make \
-&& rm -rf /var/cache/apk/*
+RUN apk --no-cache --no-progress add git make \
+    && rm -rf /var/cache/apk/*
 
 WORKDIR /go/aloba
 
@@ -16,9 +15,8 @@ RUN go mod download
 COPY . .
 RUN make build
 
-FROM alpine:3.10
-RUN apk --update upgrade \
-    && apk --no-cache --no-progress add ca-certificates \
+FROM alpine
+RUN apk --no-cache --no-progress add ca-certificates \
     && rm -rf /var/cache/apk/*
 
 LABEL "com.github.actions.name"="Aloba"

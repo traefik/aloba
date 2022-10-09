@@ -44,3 +44,54 @@ archives:
         format: zip
     files:
       - LICENSE
+
+docker_manifests:
+  - name_template: 'traefik/aloba:{{ .Tag }}'
+    image_templates:
+      - 'traefik/aloba:{{ .Tag }}-amd64'
+      - 'traefik/aloba:{{ .Tag }}-arm64'
+  - name_template: 'traefik/aloba:latest'
+    image_templates:
+      - 'traefik/aloba:{{ .Tag }}-amd64'
+      - 'traefik/aloba:{{ .Tag }}-arm64'
+  - name_template: 'traefik/aloba:v{{ .Major }}.{{ .Minor }}'
+    image_templates:
+      - 'traefik/aloba:v{{ .Major }}.{{ .Minor }}-amd64'
+      - 'traefik/aloba:v{{ .Major }}.{{ .Minor }}-arm64'
+
+dockers:
+  - use: buildx
+    goos: linux
+    goarch: amd64
+    dockerfile: buildx.Dockerfile
+    image_templates:
+      - 'traefik/aloba:latest-amd64'
+      - 'traefik/aloba:{{ .Tag }}-amd64'
+      - 'traefik/aloba:v{{ .Major }}.{{ .Minor }}-amd64'
+    build_flag_templates:
+      - '--pull'
+      - '--label=org.opencontainers.image.description=Add labels and milestone on pull requests and issues.'
+      - '--label=org.opencontainers.image.created={{.Date}}'
+      - '--label=org.opencontainers.image.title={{.ProjectName}}'
+      - '--label=org.opencontainers.image.revision={{.FullCommit}}'
+      - '--label=org.opencontainers.image.version={{.Version}}'
+      - '--label=org.opencontainers.image.source={{.GitURL}}'
+      - '--platform=linux/amd64'
+
+  - use: buildx
+    goos: linux
+    goarch: arm64
+    dockerfile: buildx.Dockerfile
+    image_templates:
+      - 'traefik/aloba:latest-arm64'
+      - 'traefik/aloba:{{ .Tag }}-arm64'
+      - 'traefik/aloba:v{{ .Major }}.{{ .Minor }}-arm64'
+    build_flag_templates:
+      - '--pull'
+      - '--label=org.opencontainers.image.description=Add labels and milestone on pull requests and issues.'
+      - '--label=org.opencontainers.image.created={{.Date}}'
+      - '--label=org.opencontainers.image.title={{.ProjectName}}'
+      - '--label=org.opencontainers.image.revision={{.FullCommit}}'
+      - '--label=org.opencontainers.image.version={{.Version}}'
+      - '--label=org.opencontainers.image.source={{.GitURL}}'
+      - '--platform=linux/arm64'
