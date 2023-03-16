@@ -56,6 +56,19 @@ docker_manifests:
       - 'traefik/aloba:v{{ .Major }}.{{ .Minor }}-amd64'
       - 'traefik/aloba:v{{ .Major }}.{{ .Minor }}-arm64'
 
+  - name_template: 'ghcr.io/traefik/aloba:{{ .Tag }}'
+    image_templates:
+      - 'ghcr.io/traefik/aloba:{{ .Tag }}-amd64'
+      - 'ghcr.io/traefik/aloba:{{ .Tag }}-arm64'
+  - name_template: 'ghcr.io/traefik/aloba:latest'
+    image_templates:
+      - 'ghcr.io/traefik/aloba:{{ .Tag }}-amd64'
+      - 'ghcr.io/traefik/aloba:{{ .Tag }}-arm64'
+  - name_template: 'ghcr.io/traefik/aloba:v{{ .Major }}.{{ .Minor }}'
+    image_templates:
+      - 'ghcr.io/traefik/aloba:v{{ .Major }}.{{ .Minor }}-amd64'
+      - 'ghcr.io/traefik/aloba:v{{ .Major }}.{{ .Minor }}-arm64'
+
 dockers:
   - use: buildx
     goos: linux
@@ -65,6 +78,9 @@ dockers:
       - 'traefik/aloba:latest-amd64'
       - 'traefik/aloba:{{ .Tag }}-amd64'
       - 'traefik/aloba:v{{ .Major }}.{{ .Minor }}-amd64'
+      - 'ghcr.io/traefik/aloba:latest-amd64'
+      - 'ghcr.io/traefik/aloba:{{ .Tag }}-amd64'
+      - 'ghcr.io/traefik/aloba:v{{ .Major }}.{{ .Minor }}-amd64'
     build_flag_templates:
       - '--pull'
       - '--label=org.opencontainers.image.description=Add labels and milestone on pull requests and issues.'
@@ -83,6 +99,9 @@ dockers:
       - 'traefik/aloba:latest-arm64'
       - 'traefik/aloba:{{ .Tag }}-arm64'
       - 'traefik/aloba:v{{ .Major }}.{{ .Minor }}-arm64'
+      - 'ghcr.io/traefik/aloba:latest-arm64'
+      - 'ghcr.io/traefik/aloba:{{ .Tag }}-arm64'
+      - 'ghcr.io/traefik/aloba:v{{ .Major }}.{{ .Minor }}-arm64'
     build_flag_templates:
       - '--pull'
       - '--label=org.opencontainers.image.description=Add labels and milestone on pull requests and issues.'
